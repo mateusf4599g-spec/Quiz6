@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Estudos</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+padding:15px;
+}
+
+.container{
+background:#1e293b;
+padding:25px;
+border-radius:12px;
+width:95%;
+max-width:600px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.temaBtn{
+background:#111827;
+padding:16px;
+margin:10px 0;
+border-radius:8px;
+cursor:pointer;
+text-align:center;
+font-size:30px;
+}
+
+.temaBtn:hover{
+background:#1f2937;
+}
+
+.pergunta{
+font-size:32px;
+margin-bottom:20px;
+line-height:1.4;
+}
+
+.opcao{
+background:#111827;
+padding:16px;
+margin:10px 0;
+border-radius:8px;
+cursor:pointer;
+font-size:24px;
+}
+
+.selecionada{
+background:#2563eb;
+}
+
+.opcao:hover{
+background:#1f2937;
+}
+
+.correta{
+background:#16a34a !important;
+}
+
+.errada{
+background:#dc2626 !important;
+}
+
+#explicacao{
+margin-top:15px;
+background:#111827;
+padding:15px;
+border-radius:8px;
+font-size:18px;
+}
+
+#placar{
+font-size:22px;
+margin-bottom:10px;
+}
+
+#tema{
+font-size:18px;
+margin-bottom:10px;
+}
+
+button{
+margin-top:15px;
+padding:16px;
+width:100%;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:24px;
+}
+
+#barra{
+height:12px;
+background:#1f2937;
+border-radius:10px;
+margin-bottom:20px;
+overflow:hidden;
+}
+
+#progresso{
+height:12px;
+background:#3b82f6;
+width:0%;
+transition:0.4s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="menu"></div>
+
+<div class="container" id="quiz" style="display:none">
+
+<div id="barra">
+<div id="progresso"></div>
+</div>
+
+<div id="placar"></div>
+<div id="tema"></div>
+
+<div class="pergunta" id="pergunta"></div>
+
+<div class="opcao" id="op0"></div>
+<div class="opcao" id="op1"></div>
+<div class="opcao" id="op2"></div>
+<div class="opcao" id="op3"></div>
+
+<div id="explicacao"></div>
+
+<button id="btnConfirmar" onclick="confirmarResposta()">Confirmar resposta</button>
+<button id="btnProxima" onclick="proxima()" style="display:none">Próxima pergunta</button>
+<button onclick="voltarMenu()">Voltar ao menu</button>
+
+</div>
+
+<script>
+
+let temaSelecionado=null
+let opcaoSelecionada=null
+
+let banco=[
+
+{
+tema:"Fotossíntese",
+pergunta:"Onde ocorre principalmente a fotossíntese?",
+opcoes:["Folhas","Raiz","Caule","Casca"],
+correta:0,
+explicacao:"A fotossíntese ocorre principalmente nas folhas porque nelas estão os cloroplastos."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual gás é absorvido pelas plantas durante a fotossíntese?",
+opcoes:["Oxigênio","Nitrogênio","Gás carbônico","Hidrogênio"],
+correta:2,
+explicacao:"Durante a fotossíntese as plantas absorvem gás carbônico do ar para produzir glicose."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual substância é produzida pela fotossíntese e serve de alimento para a planta?",
+opcoes:["Glicose","Amido","Proteína","Ácido"],
+correta:0,
+explicacao:"A glicose é o principal produto energético produzido na fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual gás é liberado pelas plantas durante a fotossíntese?",
+opcoes:["Nitrogênio","Oxigênio","Hélio","Metano"],
+correta:1,
+explicacao:"O oxigênio é liberado como subproduto da quebra da água durante a fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Em qual organela celular ocorre a fotossíntese?",
+opcoes:["Mitocôndria","Cloroplasto","Núcleo","Ribossomo"],
+correta:1,
+explicacao:"A fotossíntese ocorre nos cloroplastos, que possuem clorofila."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual parte da planta possui maior quantidade de cloroplastos?",
+opcoes:["Folhas","Raízes","Flores","Frutos"],
+correta:0,
+explicacao:"As folhas são as principais estruturas responsáveis pela fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual fator é essencial para que ocorra fotossíntese?",
+opcoes:["Luz","Areia","Vento","Sal"],
+correta:0,
+explicacao:"A energia luminosa é necessária para iniciar as reações da fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A fotossíntese transforma energia luminosa em:",
+opcoes:["Energia elétrica","Energia química","Energia térmica","Energia mecânica"],
+correta:1,
+explicacao:"A luz solar é convertida em energia química armazenada na glicose."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual estrutura da folha permite entrada e saída de gases?",
+opcoes:["Estômatos","Cutícula","Pecíolo","Xilema"],
+correta:0,
+explicacao:"Os estômatos regulam as trocas gasosas da planta."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A água utilizada na fotossíntese é absorvida principalmente por:",
+opcoes:["Folhas","Flores","Raízes","Frutos"],
+correta:2,
+explicacao:"As raízes absorvem água do solo que será usada na fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A fotossíntese ocorre com maior intensidade durante:",
+opcoes:["Noite","Dia","Inverno","Escuridão"],
+correta:1,
+explicacao:"A presença de luz solar aumenta a taxa de fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual pigmento secundário também participa da captura de luz?",
+opcoes:["Carotenoides","Hemoglobina","Melanina","Queratina"],
+correta:0,
+explicacao:"Carotenoides ajudam a captar luz e proteger a clorofila."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual composto é formado a partir da fotossíntese e pode ser armazenado pela planta?",
+opcoes:["Amido","Celulose","Proteína","Lignina"],
+correta:0,
+explicacao:"A glicose pode ser convertida em amido para armazenamento."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A fotossíntese contribui diretamente para:",
+opcoes:["Produção de oxigênio","Produção de ferro","Produção de sal","Produção de petróleo"],
+correta:0,
+explicacao:"O oxigênio liberado na fotossíntese é essencial para a respiração de muitos seres vivos."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual cor de luz é mais absorvida pela clorofila?",
+opcoes:["Verde","Vermelha","Branca","Cinza"],
+correta:1,
+explicacao:"A clorofila absorve principalmente luz vermelha e azul."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Por que as folhas geralmente são verdes?",
+opcoes:["Refletem luz verde","Produzem tinta verde","Absorvem luz verde","Produzem clorofila azul"],
+correta:0,
+explicacao:"A clorofila reflete a luz verde e absorve outras cores do espectro."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A fase clara da fotossíntese depende diretamente de:",
+opcoes:["Luz","Solo","Raiz","Nitrogênio"],
+correta:0,
+explicacao:"As reações da fase clara utilizam energia luminosa."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"A fotossíntese é essencial para:",
+opcoes:["Produzir energia elétrica","Manter a vida na Terra","Produzir metais","Formar rochas"],
+correta:1,
+explicacao:"Ela produz alimento e oxigênio para grande parte dos seres vivos."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual elemento químico está presente na molécula de clorofila?",
+opcoes:["Magnésio","Ferro","Cálcio","Zinco"],
+correta:0,
+explicacao:"A clorofila possui um átomo central de magnésio."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual processo utiliza a glicose produzida na fotossíntese para gerar energia?",
+opcoes:["Respiração celular","Fermentação","Digestão","Transpiração"],
+correta:0,
+explicacao:"A respiração celular quebra glicose para liberar energia."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Plantas realizam fotossíntese principalmente em qual período?",
+opcoes:["Durante o dia","Somente à noite","Apenas no inverno","Somente no verão"],
+correta:0,
+explicacao:"A presença de luz solar durante o dia permite a realização da fotossíntese."
+},
+
+{
+tema:"Fotossíntese",
+pergunta:"Qual pigmento capta luz?",
+opcoes:["Clorofila","Lignina","Celulose","Suberina"],
+correta:0,
+explicacao:"A clorofila é o pigmento responsável por absorver energia luminosa."
+},
+
+{
+tema:"Solo",
+pergunta:"Qual nutriente estimula crescimento vegetativo?",
+opcoes:["Nitrogênio","Cálcio","Magnésio","Ferro"],
+correta:0,
+explicacao:"O nitrogênio participa da formação de proteínas e estimula crescimento vegetativo."
+},
+
+{
+tema:"Entomologia",
+pergunta:"Besouros pertencem a qual ordem?",
+opcoes:["Coleoptera","Diptera","Hemiptera","Hymenoptera"],
+correta:0,
+explicacao:"Coleoptera é a ordem dos besouros."
+}
+
+]
+
+let perguntas=[]
+let atual=0
+let pontos=0
+let respondido=false
+
+function criarMenu(){
+
+let menu=document.getElementById("menu")
+
+let temas=[...new Set(banco.map(p=>p.tema))]
+
+menu.innerHTML="<h2 style='font-size:32px'>Escolha o tema</h2>"
+
+temas.forEach(function(t){
+
+let botao=document.createElement("div")
+botao.className="temaBtn"
+botao.innerText=t
+
+botao.onclick=function(){
+
+temaSelecionado=t
+
+document.querySelectorAll(".temaBtn").forEach(b=>{
+b.classList.remove("selecionada")
+})
+
+botao.classList.add("selecionada")
+
+}
+
+menu.appendChild(botao)
+
+})
+
+let confirmar=document.createElement("button")
+confirmar.innerText="Confirmar tema"
+
+confirmar.onclick=function(){
+
+if(temaSelecionado){
+iniciarQuiz(temaSelecionado)
+}
+
+}
+
+menu.appendChild(confirmar)
+
+}
+
+function iniciarQuiz(tema){
+
+perguntas=banco.filter(p=>p.tema===tema)
+
+embaralhar(perguntas)
+
+document.getElementById("menu").style.display="none"
+document.getElementById("quiz").style.display="block"
+
+atual=0
+pontos=0
+
+carregar()
+
+}
+
+function carregar(){
+
+let p=perguntas[atual]
+
+document.getElementById("tema").innerText="Tema: "+p.tema
+document.getElementById("pergunta").innerText=p.pergunta
+
+for(let i=0;i<4;i++){
+
+let op=document.getElementById("op"+i)
+
+op.innerText=p.opcoes[i]
+op.className="opcao"
+
+op.onclick=function(){
+
+opcaoSelecionada=i
+
+document.querySelectorAll(".opcao").forEach(o=>{
+o.classList.remove("selecionada")
+})
+
+op.classList.add("selecionada")
+
+}
+
+}
+
+document.getElementById("placar").innerText=
+"Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
+
+document.getElementById("progresso").style.width=
+((atual/perguntas.length)*100)+"%"
+
+document.getElementById("explicacao").innerText=""
+
+respondido=false
+
+document.getElementById("btnProxima").style.display="none"
+document.getElementById("btnConfirmar").style.display="block"
+
+}
+
+function confirmarResposta(){
+
+if(opcaoSelecionada===null) return
+
+responder(opcaoSelecionada)
+
+opcaoSelecionada=null
+
+document.getElementById("btnProxima").style.display="block"
+document.getElementById("btnConfirmar").style.display="none"
+
+}
+
+function responder(i){
+
+if(respondido) return
+
+respondido=true
+
+let correta=perguntas[atual].correta
+
+if(i===correta){
+
+document.getElementById("op"+i).classList.add("correta")
+pontos++
+
+}else{
+
+document.getElementById("op"+i).classList.add("errada")
+document.getElementById("op"+correta).classList.add("correta")
+
+}
+
+document.getElementById("explicacao").innerText=
+"Explicação: "+perguntas[atual].explicacao
+
+}
+
+function proxima(){
+
+atual++
+
+if(atual>=perguntas.length){
+
+alert("Fim do quiz! Pontos: "+pontos+" de "+perguntas.length)
+
+location.reload()
+
+return
+
+}
+
+carregar()
+
+}
+
+function embaralhar(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1))
+
+let temp=array[i]
+array[i]=array[j]
+array[j]=temp
+
+}
+
+}
+
+// BOTÃO VOLTAR AO MENU
+
+function voltarMenu(){
+
+document.getElementById("quiz").style.display="none"
+document.getElementById("menu").style.display="block"
+
+atual=0
+pontos=0
+respondido=false
+opcaoSelecionada=null
+temaSelecionado=null
+
+document.getElementById("menu").innerHTML=""
+
+criarMenu()
+
+}
+
+criarMenu()
+
+</script>
+
+</body>
+</html>
