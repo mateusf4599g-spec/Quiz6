@@ -6,7 +6,6 @@
 <title>Quiz de Estudos</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:#0f172a;
@@ -122,6 +121,29 @@ width:0%;
 transition:0.4s;
 }
 
+.barra-pesquisa{
+display:flex;
+gap:5px;
+margin-bottom:20px;
+}
+
+.barra-pesquisa input{
+flex:1;
+padding:10px;
+border-radius:6px;
+border:none;
+font-size:18px;
+}
+
+.barra-pesquisa button{
+padding:10px 15px;
+border-radius:6px;
+border:none;
+background:#2563eb;
+color:white;
+cursor:pointer;
+font-size:16px;
+}
 </style>
 </head>
 
@@ -133,6 +155,10 @@ transition:0.4s;
 
 <div id="barra">
 <div id="progresso"></div>
+</div>
+
+<div id="aviso" style="background:#16a34a; color:white; padding:10px; border-radius:8px; margin-bottom:10px; font-size:16px;">
+⚠️ O placar com matéria e assunto só será correto se você selecionar matéria e assunto pelo menu.
 </div>
 
 <div id="placar"></div>
@@ -154,7 +180,6 @@ transition:0.4s;
 </div>
 
 <script>
-
 let materiaSelecionada=null
 let assuntoSelecionado=null
 let opcaoSelecionada=null
@@ -576,7 +601,14 @@ let banco=[
 {materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"O atraso da senescência pode ser promovido por:", opcoes:["Citocininas","Etileno","ABA","Auxinas"], correta:1, explicacao:"Citocininas retardam a senescência ao manter a atividade metabólica."},
 
 {materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A abscisão de frutos pode ser influenciada por:", opcoes:["Baixa umidade apenas","Produção de clorofila","Ação hormonal como etileno","Ausência de nutrientes"], correta:2, explicacao:"O etileno regula a abscisão de frutos, promovendo sua queda."}
- 
+
+
+
+
+
+
+
+
 ]
 
 let perguntas=[]
@@ -584,267 +616,217 @@ let atual=0
 let pontos=0
 let respondido=false
 
-// MENU MATÉRIAS + CONFIRMAR
-
+// CRIAR MENU MATÉRIAS COM BARRA DE PESQUISA
 function criarMenuMaterias(){
+  let menu=document.getElementById("menu")
+  menu.innerHTML = `
+    <div class="barra-pesquisa">
+      <input type="text" id="pesquisaInput" placeholder="Pesquisar matéria, assunto ou pergunta...">
+      <button onclick="pesquisarQuestoes()">Pesquisar</button>
+      <button onclick="limparBusca()">Limpar</button>
+    </div>
+    <h2 style='font-size:32px'>Escolha a matéria</h2>
+  `
+  
+  let materias=[...new Set(banco.map(p=>p.materia))]
 
-let menu=document.getElementById("menu")
+  materias.forEach(function(m){
+    let botao=document.createElement("div")
+    botao.className="temaBtn"
+    botao.innerText=m
 
-let materias=[...new Set(banco.map(p=>p.materia))]
+    botao.onclick=function(){
+      materiaSelecionada=m
+      document.querySelectorAll(".temaBtn").forEach(b=>{
+        b.classList.remove("selecionadaMenu")
+      })
+      botao.classList.add("selecionadaMenu")
+    }
 
-menu.innerHTML="<h2 style='font-size:32px'>Escolha a matéria</h2>"
+    menu.appendChild(botao)
+  })
 
-materias.forEach(function(m){
-
-let botao=document.createElement("div")
-botao.className="temaBtn"
-botao.innerText=m
-
-botao.onclick=function(){
-
-materiaSelecionada=m
-
-document.querySelectorAll(".temaBtn").forEach(b=>{
-b.classList.remove("selecionadaMenu")
-})
-
-botao.classList.add("selecionadaMenu")
-
+  let confirmar=document.createElement("button")
+  confirmar.innerText="Confirmar matéria"
+  confirmar.onclick=function(){
+    if(materiaSelecionada){
+      criarMenuAssuntos(materiaSelecionada)
+    }else{
+      alert("Selecione uma matéria")
+    }
+  }
+  menu.appendChild(confirmar)
 }
 
-menu.appendChild(botao)
-
-})
-
-// BOTÃO CONFIRMAR MATÉRIA
-let confirmar=document.createElement("button")
-confirmar.innerText="Confirmar matéria"
-
-confirmar.onclick=function(){
-
-if(materiaSelecionada){
-criarMenuAssuntos(materiaSelecionada)
-}else{
-alert("Selecione uma matéria")
-}
-
-}
-
-menu.appendChild(confirmar)
-
-}
-
-// MENU ASSUNTOS COM CONFIRMAR
-
+// MENU ASSUNTOS
 function criarMenuAssuntos(materia){
+  let menu=document.getElementById("menu")
+  let assuntos=[...new Set(banco.filter(p=>p.materia===materia).map(p=>p.assunto))]
+  menu.innerHTML="<h2 style='font-size:28px'>"+materia+"</h2><p>Escolha o assunto</p>"
+  assuntos.forEach(function(a){
+    let botao=document.createElement("div")
+    botao.className="temaBtn"
+    botao.innerText=a
 
-let menu=document.getElementById("menu")
-
-let assuntos=[...new Set(
-banco.filter(p=>p.materia===materia).map(p=>p.assunto)
-)]
-
-menu.innerHTML="<h2 style='font-size:28px'>"+materia+"</h2>"
-menu.innerHTML+="<p>Escolha o assunto</p>"
-
-assuntos.forEach(function(a){
-
-let botao=document.createElement("div")
-botao.className="temaBtn"
-botao.innerText=a
-
-botao.onclick=function(){
-
-assuntoSelecionado=a
-
-document.querySelectorAll(".temaBtn").forEach(b=>{
-b.classList.remove("selecionadaMenu")
-})
-
-botao.classList.add("selecionadaMenu")
-
+    botao.onclick=function(){
+      assuntoSelecionado=a
+      document.querySelectorAll(".temaBtn").forEach(b=>{
+        b.classList.remove("selecionadaMenu")
+      })
+      botao.classList.add("selecionadaMenu")
+    }
+    menu.appendChild(botao)
+  })
+  let confirmar=document.createElement("button")
+  confirmar.innerText="Confirmar assunto"
+  confirmar.onclick=function(){
+    if(materiaSelecionada && assuntoSelecionado){
+      iniciarQuiz(materiaSelecionada,assuntoSelecionado)
+    }else{
+      alert("Selecione matéria e assunto")
+    }
+  }
+  menu.appendChild(confirmar)
+  let voltar=document.createElement("button")
+  voltar.innerText="Voltar"
+  voltar.onclick=function(){ criarMenuMaterias() }
+  menu.appendChild(voltar)
 }
 
-menu.appendChild(botao)
-
-})
-
-// BOTÃO CONFIRMAR
-
-let confirmar=document.createElement("button")
-
-confirmar.innerText="Confirmar assunto"
-
-confirmar.onclick=function(){
-
-if(materiaSelecionada && assuntoSelecionado){
-iniciarQuiz(materiaSelecionada,assuntoSelecionado)
-}else{
-alert("Selecione matéria e assunto")
+// PESQUISAR QUESTÕES
+function pesquisarQuestoes(){
+  let termo=document.getElementById("pesquisaInput").value.toLowerCase()
+  let resultados=banco.filter(p=>{
+    return p.pergunta.toLowerCase().includes(termo) ||
+           p.assunto.toLowerCase().includes(termo) ||
+           p.materia.toLowerCase().includes(termo)
+  })
+  if(resultados.length===0){
+    alert("Nenhuma questão encontrada")
+    return
+  }
+  perguntas=resultados
+  atual=0
+  pontos=0
+  document.getElementById("menu").style.display="none"
+  document.getElementById("quiz").style.display="block"
+  carregar()
 }
 
+function limparBusca(){
+  document.getElementById("pesquisaInput").value=""
 }
 
-menu.appendChild(confirmar)
-
-// VOLTAR
-let voltar=document.createElement("button")
-voltar.innerText="Voltar"
-voltar.onclick=function(){
-criarMenuMaterias()
-}
-
-menu.appendChild(voltar)
-
-}
-
-// RESTO DO CÓDIGO IGUAL
-
+// RESTO DO QUIZ
 function iniciarQuiz(materia,assunto){
-
-perguntas=banco.filter(p=>p.materia===materia && p.assunto===assunto)
-
-embaralhar(perguntas)
-
-document.getElementById("menu").style.display="none"
-document.getElementById("quiz").style.display="block"
-
-atual=0
-pontos=0
-
-carregar()
-
+  perguntas=banco.filter(p=>p.materia===materia && p.assunto===assunto)
+  embaralhar(perguntas)
+  document.getElementById("menu").style.display="none"
+  document.getElementById("quiz").style.display="block"
+  atual=0
+  pontos=0
+  carregar()
 }
 
 function carregar(){
-
-let p=perguntas[atual]
-
-document.getElementById("tema").innerText=p.materia+" → "+p.assunto
-document.getElementById("pergunta").innerText=p.pergunta
-
-for(let i=0;i<4;i++){
-
-let op=document.getElementById("op"+i)
-
-op.innerText=p.opcoes[i]
-op.className="opcao"
-
-op.onclick=function(){
-
-opcaoSelecionada=i
-
-document.querySelectorAll(".opcao").forEach(o=>{
-o.classList.remove("selecionada")
-})
-
-op.classList.add("selecionada")
-
-}
-
-}
-
-document.getElementById("placar").innerText=
-"Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
-
-document.getElementById("progresso").style.width=
-((atual/perguntas.length)*100)+"%"
-
-document.getElementById("explicacao").innerText=""
-
-respondido=false
-
-document.getElementById("btnProxima").style.display="none"
-document.getElementById("btnConfirmar").style.display="block"
-
+  let p=perguntas[atual]
+  document.getElementById("tema").innerText=p.materia+" → "+p.assunto
+  document.getElementById("pergunta").innerText=p.pergunta
+  for(let i=0;i<4;i++){
+    let op=document.getElementById("op"+i)
+    op.innerText=p.opcoes[i]
+    op.className="opcao"
+    op.onclick=function(){
+      opcaoSelecionada=i
+      document.querySelectorAll(".opcao").forEach(o=>{
+        o.classList.remove("selecionada")
+      })
+      op.classList.add("selecionada")
+    }
+  }
+  document.getElementById("placar").innerText="Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
+  document.getElementById("progresso").style.width=((atual/perguntas.length)*100)+"%"
+  document.getElementById("explicacao").innerText=""
+  respondido=false
+  document.getElementById("btnProxima").style.display="none"
+  document.getElementById("btnConfirmar").style.display="block"
 }
 
 function confirmarResposta(){
-
-if(opcaoSelecionada===null) return
-
-responder(opcaoSelecionada)
-
-opcaoSelecionada=null
-
-document.getElementById("btnProxima").style.display="block"
-document.getElementById("btnConfirmar").style.display="none"
-
+  if(opcaoSelecionada===null) return
+  responder(opcaoSelecionada)
+  opcaoSelecionada=null
+  document.getElementById("btnProxima").style.display="block"
+  document.getElementById("btnConfirmar").style.display="none"
 }
 
 function responder(i){
-
-if(respondido) return
-
-respondido=true
-
-let correta=perguntas[atual].correta
-
-if(i===correta){
-
-document.getElementById("op"+i).classList.add("correta")
-pontos++
-
-}else{
-
-document.getElementById("op"+i).classList.add("errada")
-document.getElementById("op"+correta).classList.add("correta")
-
-}
-
-document.getElementById("explicacao").innerText=
-"Explicação: "+perguntas[atual].explicacao
-
+  if(respondido) return
+  respondido=true
+  let correta=perguntas[atual].correta
+  if(i===correta){
+    document.getElementById("op"+i).classList.add("correta")
+    pontos++
+  }else{
+    document.getElementById("op"+i).classList.add("errada")
+    document.getElementById("op"+correta).classList.add("correta")
+  }
+  document.getElementById("explicacao").innerText="Explicação: "+perguntas[atual].explicacao
 }
 
 function proxima(){
-
-atual++
-
-if(atual>=perguntas.length){
-
-alert("Fim do quiz! Pontos: "+pontos+" de "+perguntas.length)
-location.reload()
-return
-
+  atual++
+  if(atual>=perguntas.length){
+  alert(
+    "Fim do quiz!\n"+
+    "Matéria: " + materiaSelecionada + "\n" +
+    "Assunto: " + assuntoSelecionado + "\n" +
+    "Acertou " + pontos + " de " + perguntas.length + " perguntas"
+  )
+  location.reload()
+  return
 }
-
-carregar()
-
+  carregar()
 }
 
 function embaralhar(array){
-
-for(let i=array.length-1;i>0;i--){
-
-let j=Math.floor(Math.random()*(i+1))
-
-let temp=array[i]
-array[i]=array[j]
-array[j]=temp
-
-}
-
+  for(let i=array.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1))
+    let temp=array[i]
+    array[i]=array[j]
+    array[j]=temp
+  }
 }
 
 function voltarMenu(){
-
-document.getElementById("quiz").style.display="none"
-document.getElementById("menu").style.display="block"
-
-atual=0
-pontos=0
-respondido=false
-opcaoSelecionada=null
-materiaSelecionada=null
-assuntoSelecionado=null
-
-criarMenuMaterias()
-
+  document.getElementById("quiz").style.display="none"
+  document.getElementById("menu").style.display="block"
+  atual=0
+  pontos=0
+  respondido=false
+  opcaoSelecionada=null
+  materiaSelecionada=null
+  assuntoSelecionado=null
+  criarMenuMaterias()
 }
 
-criarMenuMaterias()
-
+// ABRIR QUIZ AUTOMÁTICO SE HOUVER "fotossíntese"
+window.onload=function(){
+  criarMenuMaterias()
+  // Auto abrir só para "Fotossíntese" dentro de Biologia > Fotossíntese
+  let auto=banco.filter(p=>
+    p.materia==="Biologia" &&
+    p.assunto==="Fotossíntese"
+  )
+  if(auto.length>0){
+    perguntas=auto
+    atual=0
+    pontos=0
+    document.getElementById("menu").style.display="none"
+    document.getElementById("quiz").style.display="block"
+    carregar()
+  }
+}
 </script>
 
 </body>
