@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz de Estudos</title>
+<title>Quiz de Engenharia Florestal</title>
 
 <style>
 body{
@@ -61,11 +61,17 @@ font-size:24px;
 }
 
 .selecionada{
-background:#2563eb;
+background:#3b82f6;
+border:3px solid #60a5fa;
+transform:scale(1.02);
 }
 
 .opcao:hover{
 background:#1f2937;
+}
+
+.opcao:active{
+background:#3b82f6;
 }
 
 .correta{
@@ -149,16 +155,40 @@ font-size:16px;
 
 <body>
 
-<div class="container" id="menu"></div>
+<!-- PLACA INICIAL -->
+<div class="container" id="inicio">
+
+<h1 style="text-align:center; font-size:34px;">
+🌳 Quiz de Engenharia Florestal
+</h1>
+
+
+<p style="text-align:center; font-size:12px; margin-top:10px; opacity:0.7;">
+feito por Matheus
+</p>
+
+<p style="font-size:20px; text-align:center;">
+Sistema de perguntas e respostas para estudar matérias da Engenharia Florestal.
+</p>
+
+<p style="font-size:18px; text-align:center;">
+Escolha a matéria, escolha o assunto e responda as perguntas.
+</p>
+
+<p style="font-size:18px; text-align:center;">
+Clique em começar para iniciar.
+</p>
+
+<button onclick="comecarQuiz()">Começar</button>
+
+</div>
+
+<div class="container" id="menu" style="display:none"></div>
 
 <div class="container" id="quiz" style="display:none">
 
 <div id="barra">
 <div id="progresso"></div>
-</div>
-
-<div id="aviso" style="background:#16a34a; color:white; padding:10px; border-radius:8px; margin-bottom:10px; font-size:16px;">
-⚠️ O placar com matéria e assunto só será correto se você selecionar matéria e assunto pelo menu.
 </div>
 
 <div id="placar"></div>
@@ -188,702 +218,13 @@ let banco=[
 
 {materia:"Introdução à Engenharia Florestal", assunto:"O que é Engenharia Florestal", pergunta:"A Engenharia Florestal pode ser definida como a área que:", opcoes:["Estuda apenas a produção de madeira para indústrias","Planeja, maneja e conserva recursos florestais de forma sustentável","Trabalha exclusivamente com agricultura de grãos","Atua somente na preservação sem uso econômico"], correta:1, explicacao:"A Engenharia Florestal envolve o planejamento, manejo, conservação e uso sustentável dos recursos florestais, equilibrando produção e preservação."},
 
-{materia:"Introdução à Engenharia Florestal", assunto:"O que é Engenharia Florestal", pergunta:"Um dos principais objetivos da Engenharia Florestal é:", opcoes:["Eliminar o uso econômico das florestas","Substituir florestas por áreas agrícolas","Promover o uso sustentável dos recursos florestais","Explorar florestas sem planejamento"], correta:2, explicacao:"A Engenharia Florestal busca o uso sustentável das florestas, conciliando produção, conservação e benefícios ambientais."},
+{materia:"Mecânica dos Fluidos", assunto:"Introdução à Mecânica dos Fluidos", pergunta:"Um fluido pode ser definido corretamente como:", opcoes:["Material que mantém forma fixa independentemente da força aplicada","Substância que se deforma continuamente quando submetida a uma força tangencial","Corpo rígido que não sofre deformação","Material que possui apenas estado sólido"], correta:1, explicacao:"Fluido é qualquer substância que se deforma continuamente sob ação de uma força tangencial."},
 
-{materia:"Introdução à Engenharia Florestal", assunto:"O que é Engenharia Florestal", pergunta:"A importância econômica das florestas está relacionada principalmente à:", opcoes:["Produção de madeira, celulose e energia","Redução da biodiversidade","Eliminação de áreas naturais","Substituição de indústrias"], correta:0, explicacao:"As florestas geram madeira, celulose, biomassa, carvão vegetal e outros produtos importantes para a economia."},
+{materia:"Microbiologia Geral", assunto:"Introdução à Microbiologia Geral", pergunta:"A microbiologia pode ser definida corretamente como:", opcoes:["O estudo exclusivo de bactérias patogênicas","O estudo dos microrganismos e suas interações com o ambiente e outros seres vivos","O estudo apenas de vírus e fungos","O estudo das plantas microscópicas"], correta:1, explicacao:"A microbiologia estuda os microrganismos e suas interações com o ambiente."},
 
-{materia:"Introdução à Engenharia Florestal", assunto:"O que é Engenharia Florestal", pergunta:"Do ponto de vista ambiental, as florestas são importantes porque:", opcoes:["Aumentam a erosão do solo","Reduzem a biodiversidade","Impedem o ciclo da água","Protegem o solo, água e biodiversidade"], correta:3, explicacao:"As florestas protegem o solo contra erosão, regulam o ciclo hidrológico e mantêm a biodiversidade."},
+{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"Qual é a principal forma pela qual as plantas absorvem nutrientes do solo?", opcoes:["Pela solução do solo","Pela matéria orgânica sólida","Pelos minerais não intemperizados","Pelo ar presente nos poros"], correta:0, explicacao:"As plantas absorvem nutrientes principalmente pela solução do solo."},
 
-{materia:"Introdução à Engenharia Florestal", assunto:"O que é Engenharia Florestal", pergunta:"A importância social das florestas está associada a:", opcoes:["Geração de empregos e qualidade de vida","Aumento da poluição","Redução de recursos naturais","Exclusão de comunidades locais"], correta:0, explicacao:"As florestas contribuem para geração de empregos, renda, serviços ambientais e melhoria da qualidade de vida das populações."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Silvicultura", pergunta:"A silvicultura pode ser definida como:", opcoes:["Estudo exclusivo da fauna florestal","Produção e manejo de florestas plantadas e nativas","Exploração de minérios em áreas florestais","Conservação sem intervenção humana"], correta:1, explicacao:"Silvicultura é a ciência e prática de produzir, implantar e manejar florestas plantadas ou nativas de forma sustentável."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Silvicultura", pergunta:"Uma das principais etapas da silvicultura é:", opcoes:["Implantação de povoamentos florestais","Extração de petróleo","Construção de estradas","Mineração de solo"], correta:0, explicacao:"A implantação de povoamentos florestais envolve preparo do solo, plantio e estabelecimento das árvores."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Silvicultura", pergunta:"O manejo silvicultural tem como objetivo principal:", opcoes:["Eliminar a vegetação nativa","Promover crescimento e produtividade das florestas","Reduzir a fertilidade do solo","Impedir o crescimento das árvores"], correta:1, explicacao:"O manejo silvicultural busca garantir crescimento adequado, produtividade e sustentabilidade das florestas."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Silvicultura", pergunta:"Florestas plantadas são caracterizadas por:", opcoes:["Crescimento espontâneo sem planejamento","Ausência de manejo humano","Plantio planejado de espécies florestais","Apenas espécies nativas"], correta:2, explicacao:"Florestas plantadas são estabelecidas por meio de planejamento e plantio de espécies para produção ou recuperação ambiental."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Silvicultura", pergunta:"Uma prática comum na silvicultura para melhorar o crescimento das árvores é:", opcoes:["Desbaste e controle de competição","Retirada de toda a vegetação","Compactação do solo","Eliminação da água"], correta:0, explicacao:"O desbaste e o controle de competição reduzem a disputa por luz, água e nutrientes, favorecendo o crescimento das árvores."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Manejo Florestal", pergunta:"O manejo florestal sustentável pode ser definido como:", opcoes:["Exploração intensiva sem planejamento","Uso das florestas com reposição e conservação dos recursos","Proibição total do uso das florestas","Extração apenas de madeira nativa"], correta:1, explicacao:"O manejo florestal sustentável envolve o uso planejado dos recursos florestais garantindo sua regeneração, conservação e continuidade ao longo do tempo."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Manejo Florestal", pergunta:"Um plano de manejo florestal tem como principal finalidade:", opcoes:["Organizar a exploração racional dos recursos florestais","Eliminar a vegetação nativa","Aumentar o desmatamento","Substituir florestas por agricultura"], correta:0, explicacao:"O plano de manejo define como a floresta será explorada de forma sustentável, incluindo corte, regeneração e conservação."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Manejo Florestal", pergunta:"A exploração racional dos recursos florestais significa:", opcoes:["Retirar todos os recursos rapidamente","Utilizar os recursos sem reposição","Utilizar os recursos de forma planejada e sustentável","Explorar apenas áreas degradadas"], correta:2, explicacao:"Exploração racional envolve planejamento, reposição e conservação dos recursos florestais para uso contínuo."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Manejo Florestal", pergunta:"O ciclo de corte em manejo florestal refere-se a:", opcoes:["Tempo entre uma exploração e outra na mesma área","Quantidade de árvores plantadas","Altura das árvores cortadas","Número de espécies existentes"], correta:0, explicacao:"O ciclo de corte é o intervalo de tempo necessário para que a floresta se regenere antes de uma nova exploração."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Manejo Florestal", pergunta:"Uma prática comum no manejo florestal sustentável é:", opcoes:["Corte raso sem controle","Exploração seletiva de árvores","Queimada total da área","Extração sem inventário"], correta:1, explicacao:"A exploração seletiva retira apenas árvores planejadas, mantendo a estrutura e regeneração da floresta."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mensuração Florestal", pergunta:"A mensuração florestal tem como principal objetivo:", opcoes:["Avaliar a fauna da floresta","Medir e quantificar árvores e recursos florestais","Identificar apenas espécies nativas","Controlar pragas agrícolas"], correta:1, explicacao:"A mensuração florestal busca medir árvores, povoamentos e recursos florestais para estimar volume, biomassa e produtividade."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mensuração Florestal", pergunta:"O inventário florestal é utilizado para:", opcoes:["Quantificar e caracterizar os recursos florestais","Eliminar árvores doentes","Substituir o manejo florestal","Medir apenas o solo"], correta:0, explicacao:"O inventário florestal coleta dados sobre número de árvores, espécies, diâmetro, altura e volume para planejamento e manejo."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mensuração Florestal", pergunta:"O diâmetro à altura do peito (DAP) é medido geralmente a:", opcoes:["0,50 m do solo","1,30 m do solo","2,00 m do solo","Na base da árvore"], correta:1, explicacao:"O DAP é medido a 1,30 m do solo, sendo um padrão internacional na mensuração florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mensuração Florestal", pergunta:"A estimativa de volume de madeira depende principalmente de:", opcoes:["Cor das folhas","Altura e diâmetro das árvores","Tipo de solo apenas","Quantidade de chuva"], correta:1, explicacao:"O volume é estimado com base no diâmetro, altura e forma do tronco por meio de equações volumétricas."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mensuração Florestal", pergunta:"A biomassa florestal representa:", opcoes:["Quantidade de solo na área","Peso total da matéria orgânica das árvores","Número de folhas por árvore","Volume de água na floresta"], correta:1, explicacao:"Biomassa florestal corresponde à massa total de matéria orgânica vegetal, incluindo tronco, galhos, folhas e raízes."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Tecnologia de Produtos Florestais", pergunta:"A tecnologia de produtos florestais estuda principalmente:", opcoes:["A fauna das florestas","O processamento e utilização da madeira e derivados","A formação de solos agrícolas","A produção de sementes florestais"], correta:1, explicacao:"A tecnologia de produtos florestais envolve o estudo do processamento, transformação e uso da madeira e outros produtos como celulose, carvão e biomassa."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Tecnologia de Produtos Florestais", pergunta:"A celulose é um produto florestal utilizado principalmente para:", opcoes:["Produção de papel e derivados","Produção de fertilizantes","Construção de estradas","Controle de pragas"], correta:0, explicacao:"A celulose extraída da madeira é amplamente utilizada na fabricação de papel, papelão e outros produtos industriais."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Tecnologia de Produtos Florestais", pergunta:"O carvão vegetal é obtido por meio de:", opcoes:["Fermentação da madeira","Queima completa da madeira","Carbonização da madeira em ambiente controlado","Secagem natural da madeira"], correta:2, explicacao:"O carvão vegetal é produzido pela carbonização da madeira em ambiente com pouco oxigênio, preservando o carbono."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Tecnologia de Produtos Florestais", pergunta:"Os painéis de madeira reconstituída (MDF, MDP, compensado) são produzidos a partir de:", opcoes:["Troncos inteiros sem processamento","Partículas ou fibras de madeira processadas","Somente madeira nativa bruta","Areia e resina"], correta:1, explicacao:"Painéis reconstituídos utilizam partículas ou fibras de madeira unidas por resinas e prensadas para formar chapas."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Tecnologia de Produtos Florestais", pergunta:"A biomassa florestal pode ser utilizada principalmente para:", opcoes:["Produção de energia","Aumento da salinidade do solo","Redução da fertilidade","Formação de minerais"], correta:0, explicacao:"A biomassa florestal é uma fonte renovável de energia, utilizada na geração de calor, eletricidade e biocombustíveis."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Gestão e Conservação Ambiental", pergunta:"A gestão ambiental em Engenharia Florestal tem como principal objetivo:", opcoes:["Explorar recursos naturais sem controle","Proteger ecossistemas e garantir uso sustentável dos recursos","Eliminar áreas naturais para produção agrícola","Substituir florestas por áreas urbanas"], correta:1, explicacao:"A gestão ambiental busca conciliar uso dos recursos naturais com conservação dos ecossistemas e sustentabilidade."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Gestão e Conservação Ambiental", pergunta:"A recuperação de áreas degradadas consiste em:", opcoes:["Abandonar a área sem intervenção","Restaurar a vegetação e as funções ecológicas do ambiente","Construir estradas na área","Remover todo o solo"], correta:1, explicacao:"A recuperação de áreas degradadas envolve restauração da vegetação, do solo e das funções ecológicas do ecossistema."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Gestão e Conservação Ambiental", pergunta:"Uma prática comum na conservação ambiental é:", opcoes:["Desmatamento controlado sem reposição","Proteção de áreas de preservação permanente","Exploração intensiva de recursos","Queima de vegetação nativa"], correta:1, explicacao:"A proteção de áreas de preservação permanente (APPs) ajuda a conservar recursos hídricos, solo e biodiversidade."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Gestão e Conservação Ambiental", pergunta:"O conceito de sustentabilidade na Engenharia Florestal envolve:", opcoes:["Uso ilimitado dos recursos naturais","Equilíbrio entre produção, conservação e desenvolvimento","Eliminação da exploração econômica","Redução da biodiversidade"], correta:1, explicacao:"Sustentabilidade busca atender às necessidades atuais sem comprometer os recursos para as futuras gerações."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Gestão e Conservação Ambiental", pergunta:"O papel do engenheiro florestal na conservação ambiental inclui:", opcoes:["Planejar e executar ações de proteção e recuperação ambiental","Explorar recursos sem análise","Eliminar vegetação nativa","Reduzir áreas protegidas"], correta:0, explicacao:"O engenheiro florestal atua no planejamento, recuperação de áreas degradadas, conservação da biodiversidade e uso sustentável dos recursos naturais."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Fitogeografia e Ecologia Florestal", pergunta:"A fitogeografia estuda principalmente:", opcoes:["Distribuição das plantas no espaço geográfico","Produção industrial de madeira","Exploração mineral em florestas","Construção de estradas florestais"], correta:0, explicacao:"A fitogeografia analisa a distribuição das espécies vegetais e formações florestais no espaço geográfico e suas relações com o clima e o solo."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Fitogeografia e Ecologia Florestal", pergunta:"Os biomas brasileiros são definidos como:", opcoes:["Áreas agrícolas produtivas","Regiões com vegetação e clima semelhantes","Áreas urbanas com vegetação","Regiões sem biodiversidade"], correta:1, explicacao:"Biomas são grandes unidades ecológicas caracterizadas por clima, solo, vegetação e fauna semelhantes."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Fitogeografia e Ecologia Florestal", pergunta:"A ecologia florestal estuda:", opcoes:["Somente o crescimento das árvores","A relação entre os organismos e o ambiente florestal","A produção de carvão vegetal","A exploração de madeira"], correta:1, explicacao:"A ecologia florestal analisa as interações entre plantas, animais, solo, clima e outros fatores ambientais nas florestas."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Fitogeografia e Ecologia Florestal", pergunta:"A Amazônia é considerada um bioma importante porque:", opcoes:["Possui baixa biodiversidade","Tem pouca influência climática","É a maior floresta tropical do mundo","Não possui espécies nativas"], correta:2, explicacao:"A Amazônia é a maior floresta tropical do mundo e possui grande biodiversidade e influência climática global."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Fitogeografia e Ecologia Florestal", pergunta:"As relações ecológicas nas florestas incluem:", opcoes:["Competição, mutualismo e predação","Apenas crescimento de árvores","Somente fotossíntese","Apenas decomposição"], correta:0, explicacao:"As relações ecológicas incluem interações entre organismos, como competição, mutualismo, predação e parasitismo, fundamentais para o equilíbrio do ecossistema."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Solos e Nutrição Florestal", pergunta:"O solo é fundamental para o crescimento das espécies florestais porque:", opcoes:["Fornece suporte, água e nutrientes às plantas","Serve apenas como base física sem função química","Controla apenas a temperatura do ambiente","Substitui a fotossíntese das árvores"], correta:0, explicacao:"O solo fornece suporte físico, água e nutrientes essenciais, sendo um dos principais fatores que determinam o crescimento das espécies florestais."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Solos e Nutrição Florestal", pergunta:"A fertilidade do solo florestal está diretamente relacionada a:", opcoes:["Quantidade de areia presente","Disponibilidade de nutrientes essenciais","Cor da vegetação","Altura das árvores"], correta:1, explicacao:"A fertilidade depende da disponibilidade de nutrientes como nitrogênio, fósforo, potássio, cálcio e magnésio para as plantas."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Solos e Nutrição Florestal", pergunta:"A adubação em florestas plantadas tem como principal objetivo:", opcoes:["Eliminar a matéria orgânica","Reduzir o crescimento das árvores","Suprir deficiências nutricionais do solo","Aumentar a compactação"], correta:2, explicacao:"A adubação fornece nutrientes que podem estar deficientes, garantindo melhor crescimento e produtividade florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Solos e Nutrição Florestal", pergunta:"Espécies florestais adaptadas a solos pobres geralmente apresentam:", opcoes:["Baixa capacidade de sobrevivência","Alta exigência de fertilizantes","Adaptações fisiológicas para baixa fertilidade","Crescimento apenas em solos ricos"], correta:2, explicacao:"Algumas espécies possuem adaptações fisiológicas e ecológicas que permitem crescer em solos de baixa fertilidade."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Solos e Nutrição Florestal", pergunta:"O manejo adequado do solo em florestas contribui para:", opcoes:["Aumento da erosão","Redução da produtividade","Degradação ambiental","Melhor crescimento e sustentabilidade das espécies"], correta:3, explicacao:"O manejo adequado do solo melhora a fertilidade, reduz a degradação e aumenta a sustentabilidade da produção florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Sensoriamento Remoto e Geoprocessamento", pergunta:"O sensoriamento remoto aplicado à engenharia florestal permite principalmente:", opcoes:["Monitorar florestas por meio de imagens de satélite e sensores","Substituir completamente o trabalho de campo","Produzir fertilizantes automaticamente","Eliminar a necessidade de mapas"], correta:0, explicacao:"O sensoriamento remoto permite monitorar florestas, identificar mudanças na vegetação e analisar áreas por meio de imagens de satélite e sensores, auxiliando a gestão florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Sensoriamento Remoto e Geoprocessamento", pergunta:"O SIG (Sistema de Informação Geográfica) é utilizado na engenharia florestal para:", opcoes:["Medir apenas o diâmetro das árvores","Armazenar, analisar e integrar dados espaciais","Produzir madeira em laboratório","Calcular o pH do solo automaticamente"], correta:1, explicacao:"O SIG permite armazenar e analisar dados espaciais, integrando mapas, imagens e informações geográficas para planejamento e gestão florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Sensoriamento Remoto e Geoprocessamento", pergunta:"Imagens de satélite são importantes para o manejo florestal porque permitem:", opcoes:["Substituir o inventário florestal totalmente","Observar grandes áreas e detectar mudanças na cobertura vegetal","Eliminar a necessidade de planejamento","Controlar diretamente o crescimento das árvores"], correta:1, explicacao:"Imagens de satélite permitem observar grandes áreas, identificar desmatamento, regeneração e mudanças na cobertura vegetal, auxiliando o planejamento do manejo."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Sensoriamento Remoto e Geoprocessamento", pergunta:"O geoprocessamento na engenharia florestal está diretamente relacionado a:", opcoes:["Uso exclusivo de fertilizantes","Produção de sementes","Análise de dados espaciais e mapas temáticos","Controle manual do crescimento das plantas"], correta:2, explicacao:"O geoprocessamento envolve análise de dados espaciais, criação de mapas temáticos e interpretação de informações geográficas para gestão florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Sensoriamento Remoto e Geoprocessamento", pergunta:"Uma aplicação prática do sensoriamento remoto na engenharia florestal é:", opcoes:["Produção de húmus em laboratório","Determinação da idade das sementes","Medição direta da fotossíntese no campo","Monitoramento de desmatamento e áreas degradadas"], correta:3, explicacao:"O sensoriamento remoto é amplamente utilizado para monitorar desmatamento, degradação e mudanças na cobertura florestal, auxiliando na gestão e conservação ambiental."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mercado de trabalho e atuação do engenheiro florestal", pergunta:"O engenheiro florestal pode atuar no setor público principalmente em:", opcoes:["Órgãos ambientais, fiscalização e gestão de recursos naturais","Somente em serrarias privadas","Apenas em fazendas agrícolas","Exclusivamente em indústrias de mineração"], correta:0, explicacao:"No setor público, o engenheiro florestal atua em órgãos ambientais, fiscalização, licenciamento, manejo de unidades de conservação e gestão de recursos naturais."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mercado de trabalho e atuação do engenheiro florestal", pergunta:"No setor privado, o engenheiro florestal geralmente trabalha com:", opcoes:["Controle de tráfego urbano","Planejamento e manejo de florestas plantadas e produção de madeira","Apenas ensino fundamental","Exclusivamente produção de medicamentos"], correta:1, explicacao:"No setor privado, o engenheiro florestal atua principalmente em empresas de reflorestamento, manejo florestal, produção de madeira, celulose e biomassa."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mercado de trabalho e atuação do engenheiro florestal", pergunta:"A atuação do engenheiro florestal na pesquisa científica envolve:", opcoes:["Somente corte de árvores","Venda de fertilizantes","Desenvolvimento de estudos sobre florestas, solos, espécies e manejo sustentável","Fiscalização de trânsito"], correta:2, explicacao:"Na pesquisa, o engenheiro florestal desenvolve estudos sobre ecologia, silvicultura, manejo, solos, recuperação ambiental e tecnologias florestais."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mercado de trabalho e atuação do engenheiro florestal", pergunta:"Concursos públicos para engenheiro florestal geralmente exigem:", opcoes:["Apenas ensino médio","Experiência como pedreiro","Somente cursos técnicos","Graduação em Engenharia Florestal e conhecimentos técnicos da área"], correta:3, explicacao:"Concursos públicos normalmente exigem graduação em Engenharia Florestal e conhecimentos técnicos específicos da área ambiental e florestal."},
-
-{materia:"Introdução à Engenharia Florestal", assunto:"Mercado de trabalho e atuação do engenheiro florestal", pergunta:"Uma das vantagens da formação em Engenharia Florestal no mercado de trabalho é:", opcoes:["Atuação em diversas áreas como manejo, conservação, pesquisa e setor público","Trabalho restrito apenas a áreas rurais isoladas","Impossibilidade de atuar em órgãos ambientais","Falta de oportunidades em sustentabilidade"], correta:0, explicacao:"A Engenharia Florestal permite atuação em múltiplas áreas, incluindo setor público, privado, pesquisa, manejo, conservação ambiental e sustentabilidade."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"As sementes surgiram como uma adaptação evolutiva principalmente para:", opcoes:["Ambientes aquáticos","Ambientes terrestres secos","Ambientes subterrâneos","Ambientes com baixa luminosidade"], correta:1, explicacao:"As sementes representam uma adaptação ao ambiente terrestre, especialmente em condições mais secas, pois protegem o embrião e tornam a reprodução menos dependente de água livre."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"O surgimento das sementes está associado inicialmente a qual grupo vegetal?", opcoes:["Gimnospermas","Briófitas","Pteridófitas","Algas"], correta:0, explicacao:"As gimnospermas foram o primeiro grupo vegetal a apresentar sementes, representando uma inovação evolutiva importante."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"Antes do surgimento das sementes, a fecundação nas plantas dependia principalmente de:", opcoes:["Insetos polinizadores","Vento","Animais dispersores","Água"], correta:3, explicacao:"Plantas sem sementes, como briófitas e pteridófitas, dependem da água para o deslocamento dos gametas masculinos até os femininos."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"Uma das principais vantagens evolutivas das sementes é:", opcoes:["Produção de flores vistosas","Aumento da taxa fotossintética","Capacidade de dispersão e proteção do embrião","Redução do ciclo de vida"], correta:2, explicacao:"As sementes aumentam o sucesso reprodutivo ao proteger o embrião e facilitar sua dispersão no ambiente."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"O tegumento das sementes tem como principal função:", opcoes:["Realizar fotossíntese","Proteger o embrião contra danos e dessecação","Absorver nutrientes do solo","Produzir energia"], correta:1, explicacao:"O tegumento é a camada externa da semente responsável por proteger o embrião contra danos físicos e perda de água."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"A independência da água para a fecundação nas plantas com sementes está relacionada à presença de:", opcoes:["Esporos","Cloroplastos","Estômatos","Pólen"], correta:3, explicacao:"O grão de pólen transporta o gameta masculino até o feminino sem necessidade de água livre, geralmente por vento ou animais."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"As angiospermas diferem das gimnospermas principalmente por:", opcoes:["Produzirem frutos que envolvem as sementes","Não produzirem sementes","Serem exclusivamente aquáticas","Não realizarem fotossíntese"], correta:0, explicacao:"Nas angiospermas, as sementes ficam protegidas dentro de frutos, ao contrário das gimnospermas, onde são expostas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"A evolução das sementes permitiu:", opcoes:["Redução da variabilidade genética","Expansão das plantas em ambientes terrestres","Extinção das pteridófitas","Dependência maior da água"], correta:1, explicacao:"As sementes possibilitaram a colonização de diversos ambientes terrestres, inclusive aqueles com menor disponibilidade de água."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"O embrião presente na semente corresponde a:", opcoes:["Estrutura reprodutiva masculina","Nova planta em estágio inicial de desenvolvimento","Parte do fruto","Tecido de reserva"], correta:1, explicacao:"O embrião é a planta jovem formada após a fecundação, que dará origem a um novo indivíduo."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"História das sementes", pergunta:"Em relação aos esporos, as sementes apresentam como principal inovação:", opcoes:["Presença de reservas nutritivas e proteção","Menor tamanho","Capacidade de fotossíntese","Produção de flores"], correta:0, explicacao:"As sementes possuem tecidos de reserva e estruturas de proteção que aumentam a sobrevivência do embrião em comparação aos esporos."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"Qual é o principal papel ecológico das sementes nos ecossistemas naturais?", opcoes:["Reduzir a competição entre plantas adultas","Permitir a dispersão e colonização de novas áreas","Aumentar a taxa de fotossíntese das plantas","Substituir a reprodução sexuada"], correta:1, explicacao:"As sementes permitem a dispersão e o estabelecimento de plantas em novos locais, contribuindo para a dinâmica e regeneração dos ecossistemas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"Do ponto de vista econômico, as sementes são importantes principalmente porque:", opcoes:["São utilizadas apenas na alimentação animal","Constituem a base da produção agrícola e florestal","Servem exclusivamente para estudos científicos","Substituem fertilizantes naturais"], correta:1, explicacao:"As sementes são a base da produção agrícola e florestal, sendo essenciais para o cultivo de alimentos, fibras e madeira."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"Na reprodução das plantas, a principal função da semente é:", opcoes:["Realizar fotossíntese inicial","Proteger e nutrir o embrião até a germinação","Atrair polinizadores","Produzir hormônios de crescimento"], correta:1, explicacao:"A semente protege o embrião e fornece reservas nutritivas que sustentam o desenvolvimento inicial até a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"A dispersão de sementes contribui diretamente para:", opcoes:["Redução da biodiversidade","Isolamento genético completo das populações","Distribuição espacial das espécies vegetais","Diminuição da reprodução sexuada"], correta:2, explicacao:"A dispersão permite que as plantas ocupem diferentes áreas, influenciando sua distribuição espacial e evitando competição intensa."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"As sementes são essenciais para a regeneração natural de florestas porque:", opcoes:["Produzem oxigênio diretamente","Garantem o estabelecimento de novas plantas","Reduzem a necessidade de luz solar","Eliminam a competição entre espécies"], correta:1, explicacao:"A regeneração natural depende da germinação e do estabelecimento de plântulas originadas de sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"Em termos ecológicos, sementes viáveis acumuladas no solo constituem:", opcoes:["Banco de folhas","Banco de sementes","Reserva mineral","Horizonte orgânico"], correta:1, explicacao:"O banco de sementes do solo é formado por sementes viáveis acumuladas, fundamentais para a regeneração da vegetação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"A variabilidade genética nas populações vegetais é favorecida pelas sementes porque:", opcoes:["Eliminam mutações","Resultam de reprodução sexuada com recombinação genética","Impedem cruzamentos","Produzem clones idênticos"], correta:1, explicacao:"As sementes geralmente se originam de reprodução sexuada, promovendo recombinação genética e aumentando a variabilidade."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"Na restauração florestal, o uso de sementes é importante porque:", opcoes:["Substitui totalmente o solo degradado","Permite recompor a vegetação com espécies nativas","Evita a necessidade de luz solar","Elimina a sucessão ecológica"], correta:1, explicacao:"As sementes possibilitam a reintrodução de espécies nativas e o restabelecimento dos processos ecológicos."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"A interação entre animais e sementes é ecologicamente importante porque:", opcoes:["Reduz a germinação","Favorece a dispersão das sementes","Impede o crescimento das plantas","Destrói o embrião"], correta:1, explicacao:"Animais atuam como dispersores, transportando sementes para locais favoráveis à germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Importância das sementes", pergunta:"A importância das sementes na cadeia alimentar está relacionada ao fato de que:", opcoes:["São fonte de alimento para diversos organismos","Produzem oxigênio diretamente","Reduzem a biodiversidade","Substituem outros alimentos"], correta:0, explicacao:"As sementes são ricas em nutrientes e servem como alimento para diversos organismos, integrando as cadeias alimentares."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"Uma semente pode ser definida corretamente como:", opcoes:["Estrutura formada apenas por tecidos de reserva","Órgão resultante do desenvolvimento do óvulo fecundado contendo embrião","Parte do fruto responsável pela fotossíntese","Estrutura responsável exclusivamente pela dispersão"], correta:1, explicacao:"A semente resulta do desenvolvimento do óvulo fecundado e contém embrião, tegumento e, geralmente, tecidos de reserva."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"Qual estrutura da semente é responsável pela proteção contra danos mecânicos e perda de água?", opcoes:["Tegumento","Endosperma","Embrião","Cotilédones"], correta:0, explicacao:"O tegumento é a camada externa da semente e protege o embrião contra danos físicos e dessecação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"O embrião da semente corresponde a:", opcoes:["Tecido de reserva","Estrutura de dispersão","Nova planta em desenvolvimento","Camada protetora"], correta:2, explicacao:"O embrião é a planta em estágio inicial de desenvolvimento, originada após a fecundação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"O endosperma tem como principal função:", opcoes:["Realizar trocas gasosas","Proteger o embrião","Atrair dispersores","Armazenar substâncias nutritivas"], correta:3, explicacao:"O endosperma é um tecido de reserva que fornece nutrientes ao embrião durante a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"Em sementes florestais, a variabilidade estrutural está relacionada principalmente a:", opcoes:["Tipo de solo onde a planta cresce","Espécie e adaptação ecológica","Quantidade de luz disponível","Idade da planta-mãe"], correta:1, explicacao:"A estrutura das sementes varia entre espécies como resultado de adaptações evolutivas aos diferentes ambientes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"Os cotilédones nas sementes têm como principal função:", opcoes:["Proteção externa da semente","Armazenamento e/ou transferência de reservas ao embrião","Dispersão pelo vento","Produção de gametas"], correta:1, explicacao:"Os cotilédones podem armazenar reservas ou transferir nutrientes ao embrião durante a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"Uma característica comum das sementes florestais em comparação às agrícolas é:", opcoes:["Ausência de embrião","Maior variabilidade genética e fisiológica","Ausência de tegumento","Uniformidade estrutural"], correta:1, explicacao:"Sementes florestais geralmente apresentam maior variabilidade genética e comportamento fisiológico menos uniforme que sementes agrícolas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"O tegumento da semente origina-se a partir de:", opcoes:["Embrião","Óvulo (integumentos)","Endosperma","Fruto"], correta:1, explicacao:"O tegumento se desenvolve a partir dos integumentos do óvulo após a fecundação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"A variação no tamanho e forma das sementes florestais está principalmente associada a:", opcoes:["Processos industriais","Adaptações ecológicas e estratégias de dispersão","Padronização genética","Controle humano"], correta:1, explicacao:"A diversidade de formas e tamanhos reflete adaptações a diferentes mecanismos de dispersão e ambientes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Conceito e características de sementes florestais", pergunta:"A composição básica de uma semente inclui:", opcoes:["Embrião, tegumento e tecido de reserva","Raiz, caule e folhas","Flor, fruto e semente","Xilema, floema e câmbio"], correta:0, explicacao:"Uma semente é composta essencialmente por embrião, tegumento e, na maioria dos casos, tecidos de reserva."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"A polinização pode ser definida como:", opcoes:["Fusão dos gametas masculinos e femininos","Transferência do grão de pólen até o estigma","Formação do embrião dentro do óvulo","Desenvolvimento do fruto após fecundação"], correta:1, explicacao:"Polinização é o processo de transferência do pólen das anteras até o estigma da flor, etapa anterior à fecundação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"A fecundação nas plantas com sementes ocorre quando:", opcoes:["O pólen atinge o estigma","O gameta masculino se funde ao gameta feminino no óvulo","O fruto começa a se desenvolver","O óvulo se transforma em semente"], correta:1, explicacao:"A fecundação ocorre com a fusão do gameta masculino com o feminino dentro do óvulo, formando o zigoto."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"Após a fecundação, o óvulo se desenvolve originando:", opcoes:["O fruto","A flor","A semente","O pólen"], correta:2, explicacao:"Após a fecundação, o óvulo se transforma em semente, contendo embrião, tegumento e, geralmente, tecido de reserva."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"O fruto nas angiospermas se origina a partir de:", opcoes:["Óvulo","Tegumento","Endosperma","Ovário"], correta:3, explicacao:"O fruto se desenvolve a partir do ovário da flor após a fecundação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"O tubo polínico tem como função principal:", opcoes:["Proteger o pólen","Transportar o gameta masculino até o óvulo","Produzir gametas femininos","Formar o tegumento"], correta:1, explicacao:"O tubo polínico cresce a partir do grão de pólen e conduz os gametas masculinos até o óvulo."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"Nas angiospermas, a dupla fecundação resulta na formação de:", opcoes:["Dois embriões","Embrião e fruto","Embrião e endosperma","Tegumento e fruto"], correta:2, explicacao:"Um gameta masculino forma o zigoto (embrião) e o outro se funde com núcleos polares, originando o endosperma."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"O tegumento da semente se origina a partir de:", opcoes:["Endosperma","Embrião","Integumentos do óvulo","Ovário"], correta:2, explicacao:"O tegumento se forma a partir dos integumentos do óvulo após a fecundação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"A polinização realizada por animais é denominada:", opcoes:["Anemofilia","Hidrofília","Zoofilia","Autogamia"], correta:2, explicacao:"Zoofilia é a polinização mediada por animais, como insetos, aves e morcegos."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"A germinação da semente ocorre somente após:", opcoes:["A polinização","A formação do fruto","A fecundação e maturação fisiológica da semente","A queda da flor"], correta:2, explicacao:"A germinação só ocorre após a semente completar seu desenvolvimento e atingir maturidade fisiológica."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Formação de sementes", pergunta:"A autopolinização ocorre quando:", opcoes:["O pólen é transferido entre indivíduos diferentes","O pólen é transportado pelo vento","O pólen da mesma flor ou planta atinge o próprio estigma","Ocorre fecundação entre espécies diferentes"], correta:2, explicacao:"Na autopolinização, o pólen fecunda o estigma da própria flor ou de outra flor da mesma planta."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"O principal componente estrutural responsável pelo desenvolvimento da nova planta é:", opcoes:["Endosperma","Tegumento","Embrião","Pericarpo"], correta:2, explicacao:"O embrião é a estrutura que dará origem à nova planta durante a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"O metabolismo das sementes durante a fase de dormência é caracterizado por:", opcoes:["Alta atividade respiratória","Atividade metabólica reduzida","Intensa divisão celular","Produção ativa de clorofila"], correta:1, explicacao:"Durante a dormência, as sementes mantêm metabolismo reduzido, o que contribui para a conservação da viabilidade."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"As principais substâncias de reserva encontradas nas sementes são:", opcoes:["Vitaminas e sais minerais","Hormônios vegetais","Carboidratos, lipídios e proteínas","Ácidos nucleicos"], correta:2, explicacao:"As reservas das sementes são compostas principalmente por carboidratos, lipídios e proteínas, que fornecem energia ao embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"O vigor das sementes pode ser definido como:", opcoes:["Capacidade de produzir flores rapidamente","Quantidade total de reservas armazenadas","Tempo de dormência","Capacidade de germinar e se estabelecer sob diferentes condições ambientais"], correta:3, explicacao:"O vigor expressa o desempenho da semente, incluindo velocidade de germinação, uniformidade e capacidade de estabelecimento."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"Durante a germinação, a principal fonte inicial de energia para o embrião é:", opcoes:["Fotossíntese","Reservas armazenadas na semente","Absorção direta de nutrientes do solo","Atividade microbiana externa"], correta:1, explicacao:"O embrião utiliza as reservas internas da semente até que a plântula se torne autotrófica."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"Sementes com elevado teor de lipídios são caracterizadas por:", opcoes:["Baixa densidade energética","Alta densidade energética","Ausência de reservas","Baixa eficiência metabólica"], correta:1, explicacao:"Os lipídios possuem alta densidade energética, sendo uma importante fonte de energia durante a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"O processo inicial de absorção de água pela semente é denominado:", opcoes:["Transpiração","Imbibição","Respiração","Difusão"], correta:1, explicacao:"A imbibição é a absorção física de água pelos tecidos da semente, etapa inicial da germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"Durante a germinação, a principal função das enzimas ativadas é:", opcoes:["Produzir tegumento","Degradar reservas nutritivas","Formar estruturas reprodutivas","Induzir dispersão"], correta:1, explicacao:"As enzimas hidrolíticas degradam as reservas, disponibilizando nutrientes para o crescimento do embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"O tegumento pode influenciar a germinação ao:", opcoes:["Produzir reservas nutritivas","Regular a entrada de água e gases","Realizar fotossíntese","Originar o embrião"], correta:1, explicacao:"O tegumento controla a permeabilidade da semente, influenciando a imbibição e as trocas gasosas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Biologia de sementes", pergunta:"Sementes com alto vigor são caracterizadas por:", opcoes:["Germinação lenta e desuniforme","Maior tolerância a condições adversas e germinação uniforme","Baixa capacidade de estabelecimento","Alta sensibilidade ambiental"], correta:1, explicacao:"Sementes vigorosas apresentam germinação rápida, uniforme e maior capacidade de estabelecimento em condições variadas."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"Sementes ortodoxas são caracterizadas principalmente por:", opcoes:["Perderem viabilidade rapidamente","Tolerarem dessecação e armazenamento prolongado","Germinarem ainda na planta-mãe","Serem sempre dispersas por animais"], correta:1, explicacao:"Sementes ortodoxas toleram a dessecação e podem ser armazenadas por longos períodos sem perda significativa de viabilidade."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"Sementes recalcitrantes apresentam como principal característica:", opcoes:["Alta tolerância à dessecação","Baixa sensibilidade à temperatura","Sensibilidade à dessecação e curta longevidade","Capacidade de armazenamento prolongado"], correta:2, explicacao:"Sementes recalcitrantes são sensíveis à dessecação e apresentam curta viabilidade, dificultando o armazenamento."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"Sementes intermediárias apresentam comportamento:", opcoes:["Idêntico às ortodoxas","Totalmente igual às recalcitrantes","Tolerância parcial à dessecação e armazenamento limitado","Sem relação com armazenamento"], correta:2, explicacao:"Sementes intermediárias apresentam tolerância parcial à dessecação e menor capacidade de armazenamento que as ortodoxas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"A anemocoria refere-se à dispersão de sementes por:", opcoes:["Água","Animais","Gravidade","Vento"], correta:3, explicacao:"Anemocoria é a dispersão realizada pelo vento."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"A zoocoria é caracterizada pela dispersão de sementes por:", opcoes:["Vento","Animais","Água","Explosão do fruto"], correta:1, explicacao:"Zoocoria ocorre quando animais transportam sementes, seja aderidas ao corpo ou após ingestão."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"A hidrocoria está relacionada à dispersão por:", opcoes:["Vento","Animais","Água","Solo"], correta:2, explicacao:"Hidrocoria é a dispersão de sementes pela água, comum em ambientes aquáticos ou alagados."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"Sementes com alta longevidade em armazenamento são geralmente:", opcoes:["Recalcitrantes","Intermediárias","Ortodoxas","Imaturas"], correta:2, explicacao:"Sementes ortodoxas apresentam maior longevidade devido à tolerância à dessecação e ao armazenamento em condições controladas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"A barocoria é um tipo de dispersão que ocorre por:", opcoes:["Animais","Vento","Água","Gravidade"], correta:3, explicacao:"Na barocoria, as sementes se dispersam pela ação da gravidade, caindo próximas à planta-mãe."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"Sementes recalcitrantes são mais frequentemente encontradas em espécies de ambientes:", opcoes:["Áridos","Temperados frios","Tropicais úmidos","Desérticos"], correta:2, explicacao:"Sementes recalcitrantes são mais comuns em espécies de ambientes tropicais úmidos, onde a dessecação não é um fator limitante frequente."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Tipos de sementes", pergunta:"A classificação fisiológica das sementes baseia-se principalmente em:", opcoes:["Cor e tamanho","Comportamento em relação à dessecação e armazenamento","Forma do fruto","Tipo de raiz"], correta:1, explicacao:"A classificação fisiológica considera a resposta das sementes à dessecação e ao armazenamento, distinguindo ortodoxas, recalcitrantes e intermediárias."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A seleção de árvores matrizes deve priorizar indivíduos que apresentem:", opcoes:["Baixo crescimento","Alta produtividade e características fenotípicas desejáveis","Idade avançada apenas","Presença de pragas"], correta:1, explicacao:"Árvores matrizes devem apresentar características superiores, como vigor, sanidade e alta produção de sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"O principal objetivo do manejo de matrizes é:", opcoes:["Reduzir a variabilidade genética","Aumentar a altura das árvores","Garantir qualidade genética e fisiológica das sementes","Diminuir a produção de sementes"], correta:2, explicacao:"O manejo adequado assegura sementes com boa qualidade genética e desempenho fisiológico."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A coleta de sementes deve ser realizada preferencialmente quando:", opcoes:["As sementes ainda estão imaturas","A planta está em crescimento vegetativo","As folhas caem completamente","Os frutos apresentam maturidade fisiológica"], correta:3, explicacao:"A maturidade fisiológica garante máximo vigor e viabilidade das sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A sanidade de sementes refere-se principalmente à:", opcoes:["Ausência de patógenos e danos","Cor uniforme das sementes","Tamanho das sementes","Capacidade de dispersão"], correta:0, explicacao:"Sanidade envolve ausência de patógenos e danos físicos."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A padronização de sementes tem como objetivo principal:", opcoes:["Aumentar o peso total","Uniformizar características físicas e fisiológicas do lote","Eliminar sementes grandes","Reduzir a variabilidade genética"], correta:1, explicacao:"A padronização busca uniformidade para facilitar manejo e semeadura."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A qualidade fisiológica das sementes está diretamente relacionada a:", opcoes:["Cor externa","Altura da planta-mãe","Capacidade de germinação e vigor","Tipo de solo"], correta:2, explicacao:"Qualidade fisiológica envolve germinação e vigor."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"Evitar sementes de plantas doentes durante a coleta é importante para:", opcoes:["Aumentar o tamanho das sementes","Facilitar a dispersão","Reduzir custos de transporte","Garantir sanidade do lote"], correta:3, explicacao:"Evita contaminação por patógenos."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A mistura de sementes de diferentes matrizes contribui para:", opcoes:["Aumentar a diversidade genética do lote","Reduzir variabilidade genética","Diminuir a germinação","Padronizar tamanho"], correta:0, explicacao:"Aumenta variabilidade genética."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"O beneficiamento de sementes envolve principalmente:", opcoes:["Polinização e fecundação","Limpeza, secagem e classificação","Germinação e crescimento","Fotossíntese e respiração"], correta:1, explicacao:"Processos pós-coleta para melhorar qualidade."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Produção de sementes", pergunta:"A qualidade genética das sementes depende principalmente:", opcoes:["Do ambiente de armazenamento","Do tipo de solo","Das características das árvores matrizes","Da quantidade de água"], correta:2, explicacao:"Depende da seleção das matrizes."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Durante o desenvolvimento da semente, os nutrientes são provenientes principalmente de:", opcoes:["Fotossíntese do embrião","Planta-mãe via tecidos vasculares","Solo diretamente","Microrganismos associados"], correta:1, explicacao:"Os nutrientes são fornecidos pela planta-mãe através dos tecidos vasculares durante o desenvolvimento da semente."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"O principal tecido responsável pelo armazenamento de nutrientes em muitas sementes é:", opcoes:["Tegumento","Embrião","Endosperma","Pericarpo"], correta:2, explicacao:"O endosperma atua como principal tecido de reserva em muitas sementes, armazenando nutrientes para o embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Durante a germinação, as reservas nutritivas são mobilizadas principalmente para:", opcoes:["Produção de flores","Formação de frutos","Desenvolvimento do embrião","Dispersão da semente"], correta:2, explicacao:"As reservas são utilizadas para sustentar o crescimento do embrião até a plântula se tornar autotrófica."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Sementes ricas em amido utilizam principalmente qual composto como fonte de energia?", opcoes:["Carboidratos","Proteínas","Lipídios","Vitaminas"], correta:0, explicacao:"O amido é um carboidrato e atua como importante fonte de energia durante a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"A mobilização de reservas lipídicas durante a germinação envolve principalmente:", opcoes:["Fotossíntese","Conversão em açúcares utilizáveis","Absorção direta do solo","Produção de clorofila"], correta:1, explicacao:"Lipídios são convertidos em açúcares por vias metabólicas, fornecendo energia ao embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"As proteínas armazenadas nas sementes têm como principal função:", opcoes:["Produzir energia diretamente","Atuar como reserva de nitrogênio e aminoácidos","Formar o tegumento","Controlar a dispersão"], correta:1, explicacao:"Proteínas são degradadas em aminoácidos, utilizados na síntese de novas estruturas durante o crescimento."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Durante a imbibição, a entrada de água na semente permite:", opcoes:["Interromper o metabolismo","Iniciar processos metabólicos e enzimáticos","Reduzir a respiração","Eliminar reservas"], correta:1, explicacao:"A água ativa enzimas e reativa o metabolismo necessário para a germinação."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"O papel das enzimas na nutrição da semente durante a germinação é:", opcoes:["Produzir tegumento","Degradar reservas nutritivas","Formar pólen","Promover dispersão"], correta:1, explicacao:"As enzimas hidrolisam reservas, liberando nutrientes para o embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Sementes com maior quantidade de reservas nutritivas tendem a apresentar:", opcoes:["Menor vigor","Maior capacidade de estabelecimento inicial","Menor taxa de germinação","Dependência imediata de fotossíntese"], correta:1, explicacao:"Mais reservas permitem melhor desenvolvimento inicial da plântula."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Nutrição de sementes", pergunta:"Durante a pré-germinação, o consumo de reservas ocorre principalmente por meio de:", opcoes:["Fotossíntese","Respiração celular","Absorção de nutrientes do solo","Transpiração"], correta:1, explicacao:"A respiração celular converte reservas em energia utilizável para o crescimento do embrião."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A germinação de sementes inicia-se principalmente com:", opcoes:["Produção de folhas","Absorção de água (imbibição)","Ativação da fotossíntese","Formação do fruto"], correta:1, explicacao:"A imbibição é a primeira etapa da germinação, permitindo a reativação do metabolismo da semente."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A quebra de dormência em sementes tem como principal objetivo:", opcoes:["Aumentar o tamanho da semente","Permitir o início da germinação em condições favoráveis","Reduzir o teor de água","Estimular a dispersão"], correta:1, explicacao:"A dormência impede a germinação até que condições ambientais adequadas sejam atingidas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"Durante a germinação, a primeira estrutura a emergir geralmente é:", opcoes:["Plúmula","Cotilédone","Radícula","Endosperma"], correta:2, explicacao:"A radícula é a primeira estrutura a emergir, originando a raiz primária."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A ativação metabólica na germinação resulta principalmente em:", opcoes:["Aumento da respiração celular","Redução do consumo de energia","Interrupção enzimática","Formação imediata de flores"], correta:0, explicacao:"A germinação envolve aumento da respiração celular para fornecer energia ao embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"As enzimas atuam durante a germinação principalmente para:", opcoes:["Produzir tegumento","Degradar reservas nutritivas","Realizar fotossíntese","Promover dispersão"], correta:1, explicacao:"As enzimas hidrolisam reservas, disponibilizando nutrientes ao embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A germinação epígea caracteriza-se por:", opcoes:["Cotilédones permanecem no solo","Cotilédones são elevados acima do solo","Ausência de cotilédones","Desenvolvimento direto da raiz"], correta:1, explicacao:"Na germinação epígea, os cotilédones emergem acima da superfície do solo."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A disponibilidade de oxigênio é importante na germinação porque:", opcoes:["Impede a absorção de água","Estimula a dormência","Permite a respiração celular","Promove dispersão"], correta:2, explicacao:"O oxigênio é essencial para a respiração celular, que fornece energia ao embrião."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A temperatura influencia a germinação ao:", opcoes:["Regular a atividade enzimática","Eliminar reservas nutritivas","Impedir a absorção de água","Substituir o oxigênio"], correta:0, explicacao:"A temperatura afeta diretamente a atividade enzimática e o metabolismo da semente."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"A dormência tegumentar ocorre quando:", opcoes:["O embrião está imaturo","O tegumento impede a entrada de água ou gases","Falta de nutrientes no solo","A semente não possui reservas"], correta:1, explicacao:"O tegumento impermeável pode impedir a imbibição ou trocas gasosas, mantendo a dormência."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Germinação de sementes", pergunta:"Durante a germinação, o consumo de reservas ocorre principalmente por meio de:", opcoes:["Fotossíntese","Respiração celular","Transpiração","Absorção direta do solo"], correta:1, explicacao:"A respiração celular converte reservas em energia utilizável para o crescimento do embrião."},
-
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"O principal objetivo do armazenamento de sementes é:", opcoes:["Aumentar o tamanho das sementes","Manter a viabilidade ao longo do tempo","Estimular a germinação imediata","Reduzir a variabilidade genética"], correta:1, explicacao:"O armazenamento visa conservar a viabilidade e o vigor das sementes até sua utilização."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"A redução da umidade das sementes é importante porque:", opcoes:["Aumenta a germinação imediata","Diminui a atividade metabólica e a deterioração","Estimula a produção de frutos","Melhora a dispersão"], correta:1, explicacao:"Menor teor de água reduz o metabolismo e retarda a deterioração das sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"Temperaturas mais baixas no armazenamento de sementes contribuem para:", opcoes:["Aumentar a respiração","Acelerar a deterioração","Reduzir a atividade metabólica","Estimular a germinação"], correta:2, explicacao:"Temperaturas baixas reduzem a atividade metabólica, prolongando a viabilidade."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"A deterioração de sementes está associada principalmente a:", opcoes:["Processos metabólicos e danos celulares","Aumento da fotossíntese","Produção de flores","Formação de frutos"], correta:0, explicacao:"A deterioração envolve danos celulares acumulativos e alterações metabólicas."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"Sementes ortodoxas devem ser armazenadas preferencialmente em condições de:", opcoes:["Alta umidade e alta temperatura","Baixa umidade e baixa temperatura","Alta umidade e baixa temperatura","Baixa umidade e alta temperatura"], correta:1, explicacao:"Sementes ortodoxas toleram dessecação e são melhor conservadas em baixa umidade e temperatura."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"Sementes recalcitrantes apresentam maior dificuldade de armazenamento porque:", opcoes:["Possuem tegumento rígido","São sensíveis à dessecação","Têm alta longevidade","Apresentam baixa umidade natural"], correta:1, explicacao:"Sementes recalcitrantes não toleram a perda de água, o que limita seu armazenamento."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"A presença de oxigênio no armazenamento pode influenciar porque:", opcoes:["Elimina reservas nutritivas","Impede a germinação","Permite a respiração celular","Produz tegumento"], correta:2, explicacao:"O oxigênio permite a respiração, que pode contribuir para a deterioração ao longo do tempo."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"O controle de pragas durante o armazenamento é importante para:", opcoes:["Evitar danos físicos e perda de qualidade","Aumentar a fotossíntese","Estimular a germinação","Reduzir o tamanho das sementes"], correta:0, explicacao:"Insetos e fungos podem causar danos e reduzir a viabilidade das sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"A longevidade das sementes está diretamente relacionada a:", opcoes:["Teor de água e temperatura de armazenamento","Cor da semente","Formato do fruto","Altura da planta"], correta:1, explicacao:"Baixo teor de água e temperatura adequada aumentam a longevidade das sementes."},
-
-{materia:"Biologia, produção e tecnologias de sementes florestais", assunto:"Armazenamento de sementes", pergunta:"O armazenamento inadequado pode resultar em:", opcoes:["Aumento do vigor","Manutenção da viabilidade","Deterioração e perda de germinação","Aumento da variabilidade genética"], correta:2, explicacao:"Condições inadequadas aceleram a deterioração, reduzindo a germinação e o vigor."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"A nutrição mineral de plantas refere-se à:", opcoes:["Produção de energia pela planta","Absorção e utilização de elementos minerais essenciais","Troca gasosa nas folhas","Transporte de água no xilema"], correta:1, explicacao:"Nutrição mineral envolve a absorção e utilização de elementos minerais essenciais ao crescimento e desenvolvimento vegetal."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"Um elemento é considerado essencial quando:", opcoes:["Está presente em grande quantidade no solo","Sua ausência impede o ciclo de vida da planta","É absorvido passivamente","Aumenta a cor verde das folhas"], correta:1, explicacao:"Elemento essencial é aquele cuja ausência impede que a planta complete seu ciclo de vida."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"Os macronutrientes são caracterizados por:", opcoes:["Serem absorvidos apenas pelas folhas","Serem tóxicos em pequenas quantidades","Serem necessários em grandes quantidades","Não participarem do metabolismo"], correta:2, explicacao:"Macronutrientes são exigidos em maiores quantidades pelas plantas, como N, P e K."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"O nitrogênio é importante para a planta principalmente por participar da formação de:", opcoes:["Proteínas e ácidos nucleicos","Celulose apenas","Água celular","Cutícula"], correta:0, explicacao:"O nitrogênio é componente essencial de aminoácidos, proteínas e ácidos nucleicos."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"A absorção de nutrientes minerais ocorre principalmente pelas:", opcoes:["Folhas","Raízes","Flores","Sementes"], correta:1, explicacao:"As raízes são responsáveis pela absorção da maior parte dos nutrientes minerais do solo."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"O fósforo está diretamente relacionado a processos de:", opcoes:["Transpiração","Transporte de água","Transferência de energia (ATP)","Formação de cutícula"], correta:2, explicacao:"O fósforo é essencial na formação de ATP, atuando na transferência de energia."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"Os micronutrientes são caracterizados por:", opcoes:["Não serem necessários","Serem exigidos em pequenas quantidades","Serem tóxicos sempre","Não participarem de reações enzimáticas"], correta:1, explicacao:"Micronutrientes são necessários em pequenas quantidades, mas são essenciais ao metabolismo."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"A deficiência de nutrientes pode causar:", opcoes:["Melhora no crescimento","Aumento da fotossíntese","Maior produção de frutos","Redução do crescimento e sintomas visuais"], correta:3, explicacao:"A falta de nutrientes causa sintomas como clorose, necrose e redução do crescimento."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"O potássio tem papel importante na:", opcoes:["Síntese de DNA","Regulação osmótica e abertura estomática","Formação de clorofila","Produção de sementes"], correta:1, explicacao:"O potássio regula o equilíbrio osmótico e atua na abertura e fechamento dos estômatos."},
-
-{materia:"Fisiologia vegetal", assunto:"Nutrição mineral de plantas", pergunta:"A mobilidade de um nutriente na planta refere-se à:", opcoes:["Capacidade de ser absorvido pelas raízes","Capacidade de se redistribuir dentro da planta","Quantidade presente no solo","Velocidade de crescimento"], correta:2, explicacao:"Mobilidade refere-se à capacidade do nutriente se mover internamente na planta, especialmente entre tecidos."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"O primeiro evento fisiológico da germinação é:", opcoes:["Ativação da fotossíntese","Absorção de água (imbibição)","Divisão celular intensa","Formação da plúmula"], correta:1, explicacao:"A imbibição é o processo inicial que reativa o metabolismo da semente."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"A ativação metabólica durante a germinação resulta principalmente em:", opcoes:["Redução da respiração","Aumento da atividade respiratória","Interrupção enzimática","Perda de reservas"], correta:1, explicacao:"A germinação envolve aumento da respiração para fornecer energia ao embrião."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"As enzimas atuam na germinação principalmente para:", opcoes:["Produzir tegumento","Formar flores","Degradar reservas nutritivas","Aumentar a dispersão"], correta:2, explicacao:"Enzimas hidrolíticas quebram reservas em compostos utilizáveis pelo embrião."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"A principal fonte de energia durante o início da germinação é:", opcoes:["Reservas internas da semente","Fotossíntese","Nutrientes do solo","Água absorvida"], correta:0, explicacao:"O embrião utiliza reservas internas até que a plântula se torne autotrófica."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"A quebra de reservas amiláceas durante a germinação envolve principalmente:", opcoes:["Proteases","Amilases","Lipases","Celulases"], correta:1, explicacao:"As amilases degradam o amido em açúcares simples utilizáveis."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"Durante a germinação, os lipídios são convertidos principalmente em:", opcoes:["Proteínas","Ácidos nucleicos","Açúcares utilizáveis","Vitaminas"], correta:2, explicacao:"Lipídios são convertidos em açúcares por vias metabólicas como o ciclo do glioxilato."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"A respiração celular durante a germinação é importante porque:", opcoes:["Produz água apenas","Reduz enzimas","Elimina reservas","Gera energia (ATP) para o crescimento"], correta:3, explicacao:"A respiração fornece energia necessária para divisão e crescimento celular."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"A ativação enzimática depende diretamente da:", opcoes:["Temperatura e água","Cor da semente","Formato do fruto","Tipo de dispersão"], correta:0, explicacao:"Água e temperatura adequadas ativam enzimas envolvidas na germinação."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"As proteínas de reserva são degradadas em:", opcoes:["Lipídios","Aminoácidos","Carboidratos","Ácidos graxos"], correta:1, explicacao:"Proteínas são quebradas em aminoácidos para síntese de novas estruturas."},
-
-{materia:"Fisiologia vegetal", assunto:"Germinação de sementes", pergunta:"O consumo de reservas durante a germinação ocorre principalmente por meio de:", opcoes:["Fotossíntese","Respiração celular","Transpiração","Difusão"], correta:2, explicacao:"A respiração celular converte reservas em energia utilizável pelo embrião."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"A fotossíntese pode ser definida como:", opcoes:["Respiração celular em plantas","Conversão de energia luminosa em energia química","Absorção de água pelas raízes","Transporte de nutrientes"], correta:1, explicacao:"A fotossíntese converte energia luminosa em energia química armazenada em moléculas orgânicas."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"A fase clara da fotossíntese ocorre nos:", opcoes:["Estômatos","Tilacoides","Citoplasma","Núcleo"], correta:1, explicacao:"A fase clara ocorre nas membranas dos tilacoides dos cloroplastos."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"O principal produto energético da fase clara é:", opcoes:["Glicose","Oxigênio","ATP e NADPH","Água"], correta:2, explicacao:"A fase clara produz ATP e NADPH, utilizados na fase escura."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"O oxigênio liberado na fotossíntese é proveniente da:", opcoes:["Água","Glicose","CO2","Clorofila"], correta:0, explicacao:"O oxigênio é liberado pela fotólise da água durante a fase clara."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"A fase escura (Ciclo de Calvin) ocorre no:", opcoes:["Tilacoide","Estroma","Membrana plasmática","Núcleo"], correta:1, explicacao:"O Ciclo de Calvin ocorre no estroma do cloroplasto."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"O principal composto orgânico produzido na fotossíntese é:", opcoes:["ATP","Proteína","Carboidrato (glicose)","Lipídio"], correta:2, explicacao:"A fotossíntese produz carboidratos, principalmente glicose, a partir de CO2."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"A clorofila tem como função principal:", opcoes:["Transportar água","Produzir CO2","Realizar respiração","Absorver luz"], correta:3, explicacao:"A clorofila absorve energia luminosa necessária para a fotossíntese."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"O CO2 é utilizado na fotossíntese durante:", opcoes:["Fase escura","Fase clara","Fotólise da água","Transporte de elétrons"], correta:0, explicacao:"O CO2 é fixado no Ciclo de Calvin, na fase escura da fotossíntese."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"Os pigmentos acessórios têm como função:", opcoes:["Produzir glicose","Ampliar a faixa de absorção de luz","Liberar oxigênio","Fixar carbono"], correta:1, explicacao:"Pigmentos acessórios captam diferentes comprimentos de onda e transferem energia para a clorofila."},
-
-{materia:"Fisiologia vegetal", assunto:"Fotossíntese", pergunta:"A energia necessária para a síntese de carboidratos na fase escura vem de:", opcoes:["Luz direta","ATP e NADPH","Oxigênio","Água"], correta:1, explicacao:"ATP e NADPH produzidos na fase clara fornecem energia e poder redutor para o Ciclo de Calvin."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A respiração celular pode ser definida como:", opcoes:["Produção de glicose","Liberação de energia a partir da degradação de moléculas orgânicas","Absorção de luz","Fixação de carbono"], correta:1, explicacao:"A respiração celular libera energia a partir da quebra de compostos orgânicos, como a glicose."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"O principal local da respiração celular nas células vegetais é:", opcoes:["Cloroplasto","Mitocôndria","Núcleo","Vacúolo"], correta:1, explicacao:"A mitocôndria é o principal local onde ocorre a respiração celular."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"O principal produto energético da respiração celular é:", opcoes:["Glicose","Oxigênio","ATP","Água"], correta:2, explicacao:"O ATP é a principal molécula energética produzida na respiração celular."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A glicólise ocorre no:", opcoes:["Citoplasma","Mitocôndria","Cloroplasto","Núcleo"], correta:0, explicacao:"A glicólise ocorre no citoplasma e é a primeira etapa da respiração celular."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"O ciclo de Krebs ocorre na:", opcoes:["Membrana plasmática","Matriz mitocondrial","Citoplasma","Tilacoide"], correta:1, explicacao:"O ciclo de Krebs ocorre na matriz da mitocôndria."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A cadeia transportadora de elétrons ocorre:", opcoes:["No citoplasma","Na matriz mitocondrial","Na membrana interna da mitocôndria","No núcleo"], correta:2, explicacao:"A cadeia de transporte de elétrons ocorre na membrana interna da mitocôndria."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"O oxigênio na respiração aeróbia atua como:", opcoes:["Fonte de energia","Produto final","Enzima","Aceptor final de elétrons"], correta:3, explicacao:"O oxigênio recebe elétrons ao final da cadeia respiratória, formando água."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A respiração celular completa da glicose produz principalmente:", opcoes:["CO2 e água","ATP e glicose","Oxigênio e água","Apenas CO2"], correta:0, explicacao:"A respiração gera CO2, água e energia (ATP)."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A glicólise resulta na formação de:", opcoes:["Ácido pirúvico (piruvato)","Ácido lático","Glicose","Ácido cítrico"], correta:1, explicacao:"A glicólise converte glicose em piruvato."},
-
-{materia:"Fisiologia vegetal", assunto:"Respiração celular em plantas", pergunta:"A principal função da respiração celular nas plantas é:", opcoes:["Produzir oxigênio","Gerar ATP para atividades metabólicas","Fixar carbono","Produzir clorofila"], correta:1, explicacao:"A respiração fornece ATP necessário para processos vitais da planta."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"O xilema é responsável principalmente pelo transporte de:", opcoes:["Seiva elaborada","Água e sais minerais","Açúcares","Hormônios"], correta:1, explicacao:"O xilema conduz água e sais minerais das raízes para as partes aéreas da planta."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"O floema transporta principalmente:", opcoes:["Água","Sais minerais","Seiva elaborada (açúcares)","Oxigênio"], correta:2, explicacao:"O floema conduz açúcares produzidos na fotossíntese para diferentes partes da planta."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A transpiração vegetal ocorre principalmente através dos:", opcoes:["Xilema","Floema","Estômatos","Raízes"], correta:2, explicacao:"A transpiração ocorre principalmente pelos estômatos presentes nas folhas."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A teoria da coesão-tensão explica o transporte de água no xilema com base em:", opcoes:["Força gerada pela transpiração","Pressão osmótica nas raízes","Difusão simples","Produção de ATP"], correta:0, explicacao:"A transpiração gera tensão que puxa a coluna de água no xilema, sustentada pela coesão entre moléculas."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A pressão de raiz ocorre devido principalmente à:", opcoes:["Evaporação nas folhas","Entrada osmótica de água nas raízes","Transporte ativo no floema","Fotossíntese"], correta:1, explicacao:"A absorção de sais pelas raízes promove entrada de água por osmose, gerando pressão positiva."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A coesão entre moléculas de água é importante porque:", opcoes:["Impede a transpiração","Permite a formação de coluna contínua no xilema","Produz energia","Aumenta a fotossíntese"], correta:2, explicacao:"A coesão mantém a continuidade da coluna de água, essencial para o transporte no xilema."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A adesão da água nas paredes do xilema contribui para:", opcoes:["Reduzir o transporte","Bloquear o fluxo","Produzir ATP","Auxiliar na ascensão da seiva"], correta:3, explicacao:"A adesão ajuda a manter a água aderida às paredes do xilema, facilitando sua ascensão."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"O fluxo no floema ocorre principalmente por:", opcoes:["Gradiente de pressão (fluxo de massa)","Difusão simples","Capilaridade","Evaporação"], correta:0, explicacao:"O transporte no floema ocorre por fluxo de massa, impulsionado por gradientes de pressão osmótica."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"A transpiração excessiva pode levar à:", opcoes:["Aumento da turgidez","Desidratação da planta","Maior fotossíntese","Aumento da absorção de CO2"], correta:1, explicacao:"Perda excessiva de água pode causar déficit hídrico e murcha."},
-
-{materia:"Fisiologia vegetal", assunto:"Transporte de água e nutrientes", pergunta:"O transporte no floema pode ocorrer:", opcoes:["Apenas das raízes para folhas","Apenas de baixo para cima","Em ambas as direções conforme a necessidade","Somente durante o dia"], correta:2, explicacao:"O floema transporta solutos de fontes para drenos, podendo ocorrer em diferentes direções."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"As auxinas estão relacionadas principalmente a:", opcoes:["Queda de folhas","Alongamento celular","Maturação de frutos","Dormência"], correta:1, explicacao:"As auxinas promovem o alongamento celular, especialmente em caules."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"As giberelinas atuam principalmente em:", opcoes:["Fechamento estomático","Inibição do crescimento","Alongamento do caule e germinação","Queda de folhas"], correta:2, explicacao:"As giberelinas promovem alongamento do caule e estimulam a germinação."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"As citocininas têm como principal função:", opcoes:["Promover dormência","Estimular queda de folhas","Aumentar transpiração","Estimular divisão celular"], correta:3, explicacao:"Citocininas estimulam a divisão celular (citocinese)."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"O etileno é conhecido por atuar principalmente na:", opcoes:["Maturação de frutos","Alongamento do caule","Formação de raízes","Produção de sementes"], correta:0, explicacao:"O etileno é um hormônio gasoso que promove a maturação dos frutos."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"O ácido abscísico (ABA) está relacionado principalmente a:", opcoes:["Estimular crescimento","Induzir dormência e resposta ao estresse","Promover divisão celular","Estimular fotossíntese"], correta:1, explicacao:"O ABA atua na dormência e na resposta ao estresse hídrico."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"O fototropismo positivo é regulado principalmente por:", opcoes:["Citocininas","Etileno","Auxinas","ABA"], correta:2, explicacao:"Auxinas se redistribuem promovendo crescimento diferencial em direção à luz."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"A dominância apical ocorre devido à ação de:", opcoes:["Giberelinas","Citocininas","ABA","Auxinas"], correta:3, explicacao:"Auxinas produzidas no ápice inibem o crescimento de gemas laterais."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"A senescência foliar pode ser retardada pela ação de:", opcoes:["Citocininas","Etileno","ABA","Auxinas"], correta:0, explicacao:"Citocininas retardam o envelhecimento das folhas."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"O etileno diferencia-se dos demais hormônios vegetais por ser:", opcoes:["Sólido","Gasoso","Líquido","Inativo"], correta:1, explicacao:"O etileno é o único hormônio vegetal gasoso."},
-
-{materia:"Fisiologia vegetal", assunto:"Hormônios vegetais e crescimento", pergunta:"A quebra de dormência em sementes pode ser estimulada por:", opcoes:["ABA","Etileno","Auxinas","Giberelinas"], correta:2, explicacao:"Giberelinas estimulam a germinação e podem quebrar a dormência."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"O florescimento nas plantas está diretamente relacionado a:", opcoes:["Respiração celular","Mudanças no desenvolvimento controladas por fatores internos e externos","Absorção de água","Transporte de seiva"], correta:1, explicacao:"O florescimento é regulado por fatores como fotoperíodo, temperatura e hormônios."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"O fotoperíodo influencia o florescimento por meio da percepção de:", opcoes:["Temperatura","Umidade","Duração do dia e da noite","Disponibilidade de nutrientes"], correta:2, explicacao:"O fotoperíodo é a duração relativa de luz e escuro, influenciando o florescimento."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"A polinização pode ser definida como:", opcoes:["Formação do fruto","Fusão dos gametas","Dispersão de sementes","Transferência do pólen para o estigma"], correta:3, explicacao:"Polinização é a transferência do pólen da antera para o estigma."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"A fecundação nas angiospermas ocorre quando:", opcoes:["O gameta masculino se une ao feminino","O pólen é liberado","O fruto se forma","A flor se abre"], correta:0, explicacao:"Fecundação é a fusão dos gametas masculino e feminino."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"O tubo polínico tem como função:", opcoes:["Produzir sementes","Conduzir o gameta masculino até o óvulo","Realizar fotossíntese","Formar o fruto"], correta:1, explicacao:"O tubo polínico transporta o gameta masculino até o óvulo para a fecundação."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"A dupla fecundação nas angiospermas resulta na formação de:", opcoes:["Duas sementes","Um embrião apenas","Embrião e endosperma","Apenas fruto"], correta:2, explicacao:"Forma-se o embrião e o endosperma, tecido de reserva."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"A polinização cruzada é vantajosa porque:", opcoes:["Reduz variabilidade genética","Impede reprodução","Aumenta a uniformidade","Aumenta a variabilidade genética"], correta:3, explicacao:"A polinização cruzada promove maior diversidade genética."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"Após a fecundação, o óvulo se desenvolve em:", opcoes:["Semente","Flor","Folha","Raiz"], correta:0, explicacao:"O óvulo fecundado origina a semente."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"O estigma tem como principal função:", opcoes:["Produzir pólen","Receber o pólen","Formar sementes","Transportar água"], correta:1, explicacao:"O estigma é a estrutura receptora do pólen."},
-
-{materia:"Fisiologia vegetal", assunto:"Florescimento e reprodução", pergunta:"Após a fecundação, o ovário da flor origina:", opcoes:["Semente","Raiz","Fruto","Folha"], correta:2, explicacao:"O ovário se desenvolve em fruto após a fecundação."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A frutificação inicia-se principalmente após:", opcoes:["Polinização","Fecundação","Germinação","Dispersão"], correta:1, explicacao:"A frutificação ocorre após a fecundação, quando o ovário começa a se desenvolver em fruto."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"Durante o desenvolvimento do fruto, o ovário da flor origina:", opcoes:["Semente","Raiz","Fruto","Folha"], correta:2, explicacao:"O ovário desenvolve-se em fruto após a fecundação."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"As reservas nutritivas das sementes são armazenadas principalmente em:", opcoes:["Tegumento","Embrião","Casca do fruto","Endosperma ou cotilédones"], correta:3, explicacao:"As reservas ficam no endosperma ou nos cotilédones, dependendo da espécie."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A dormência de sementes pode ser definida como:", opcoes:["Estado em que a semente não germina mesmo em condições favoráveis","Morte da semente","Ausência de embrião","Falta de nutrientes"], correta:0, explicacao:"Dormência é a incapacidade de germinar mesmo em condições ambientais adequadas."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A maturação do fruto envolve principalmente:", opcoes:["Redução de água e mudanças bioquímicas","Aumento da dormência","Formação de raízes","Produção de clorofila apenas"], correta:1, explicacao:"A maturação envolve mudanças bioquímicas, como acúmulo de açúcares e alterações de cor."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A dormência fisiológica está relacionada principalmente a:", opcoes:["Danos mecânicos","Imaturidade do fruto","Fatores internos hormonais","Ausência de água"], correta:2, explicacao:"A dormência fisiológica envolve controle hormonal, como ação do ácido abscísico."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A quebra de dormência pode ocorrer por:", opcoes:["Aumento da temperatura apenas","Redução de nutrientes","Ausência de água","Escarificação ou estímulos ambientais"], correta:3, explicacao:"Processos como escarificação ou variações ambientais podem quebrar a dormência."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"O embrião na semente representa:", opcoes:["A nova planta em desenvolvimento","Reserva nutritiva","Parte do fruto","Estrutura de dispersão"], correta:0, explicacao:"O embrião é a futura planta contida na semente."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A acumulação de reservas na semente ocorre principalmente durante:", opcoes:["Germinação","Desenvolvimento da semente","Dispersão","Dormência"], correta:1, explicacao:"As reservas são acumuladas durante o desenvolvimento da semente ainda ligada à planta-mãe."},
-
-{materia:"Fisiologia vegetal", assunto:"Frutificação e desenvolvimento de sementes", pergunta:"A dormência tegumentar ocorre quando:", opcoes:["O embrião está morto","Há excesso de nutrientes","O tegumento impede trocas de água ou gases","A semente germina rapidamente"], correta:2, explicacao:"O tegumento impermeável pode impedir a entrada de água ou gases, mantendo a dormência."},
-
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"O estresse hídrico em plantas ocorre principalmente devido à:", opcoes:["Excesso de nutrientes","Falta de água disponível","Alta produção de ATP","Excesso de luz"], correta:1, explicacao:"O estresse hídrico ocorre quando a planta não consegue obter água suficiente para suas funções."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"Uma resposta comum das plantas ao déficit hídrico é:", opcoes:["Abertura dos estômatos","Aumento da transpiração","Fechamento dos estômatos","Aumento da fotossíntese"], correta:2, explicacao:"O fechamento estomático reduz a perda de água por transpiração."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"O ácido abscísico (ABA) atua no estresse hídrico promovendo:", opcoes:["Abertura estomática","Crescimento acelerado","Fotossíntese aumentada","Fechamento dos estômatos"], correta:3, explicacao:"O ABA sinaliza o fechamento dos estômatos em condições de seca."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"O estresse salino afeta as plantas principalmente por:", opcoes:["Causar desequilíbrio osmótico","Aumentar a absorção de água","Estimular crescimento","Reduzir a luz disponível"], correta:0, explicacao:"A alta concentração de sais dificulta a absorção de água pelas raízes."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"Uma adaptação das plantas à seca é:", opcoes:["Aumento da área foliar","Redução da perda de água","Abertura contínua dos estômatos","Aumento da transpiração"], correta:1, explicacao:"Plantas reduzem perda de água por meio de adaptações como fechamento estomático e folhas reduzidas."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"Temperaturas elevadas podem afetar as plantas ao:", opcoes:["Reduzir enzimas","Inibir a fotossíntese totalmente","Desnaturar proteínas","Aumentar a absorção de nutrientes"], correta:2, explicacao:"Altas temperaturas podem desnaturar proteínas e afetar o metabolismo."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"A produção de proteínas de choque térmico (HSPs) tem como função:", opcoes:["Produzir energia","Reduzir água","Aumentar crescimento","Proteger proteínas celulares"], correta:3, explicacao:"As HSPs ajudam a proteger e estabilizar proteínas sob estresse térmico."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"Em condições de baixa luminosidade, a planta tende a:", opcoes:["Aumentar o alongamento do caule","Reduzir crescimento","Fechar estômatos","Aumentar salinidade"], correta:0, explicacao:"O alongamento do caule (estiolamento) ocorre para buscar mais luz."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"O estresse por frio pode causar:", opcoes:["Aumento da fluidez de membranas","Rigidez das membranas celulares","Aumento da transpiração","Maior absorção de água"], correta:1, explicacao:"Baixas temperaturas reduzem a fluidez das membranas, afetando funções celulares."},
-
-{materia:"Fisiologia vegetal", assunto:"Respostas a estresses ambientais", pergunta:"Uma estratégia de adaptação ao estresse salino é:", opcoes:["Aumentar a transpiração","Reduzir fotossíntese","Acumular solutos compatíveis","Eliminar clorofila"], correta:2, explicacao:"Plantas acumulam solutos para equilibrar o potencial osmótico interno."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A senescência vegetal pode ser definida como:", opcoes:["Crescimento acelerado","Processo de envelhecimento programado das células","Formação de novos tecidos","Aumento da fotossíntese"], correta:1, explicacao:"Senescência é o processo natural de envelhecimento e degradação celular controlada."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"Durante a senescência, ocorre principalmente:", opcoes:["Síntese de proteínas","Aumento da divisão celular","Degradação de macromoléculas","Produção de novas folhas"], correta:2, explicacao:"Há degradação de proteínas, lipídios e ácidos nucleicos."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A abscisão de folhas é o processo de:", opcoes:["Formação de folhas","Fotossíntese intensa","Crescimento radicular","Queda controlada de folhas"], correta:3, explicacao:"Abscisão é a separação programada de órgãos como folhas."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A zona de abscisão é caracterizada por:", opcoes:["Células que se separam facilmente","Alta fotossíntese","Grande acúmulo de água","Produção de sementes"], correta:0, explicacao:"A zona de abscisão possui células que se rompem facilitando a queda do órgão."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"O etileno atua na senescência promovendo:", opcoes:["Crescimento vegetal","Aceleração do envelhecimento e abscisão","Produção de clorofila","Divisão celular"], correta:1, explicacao:"O etileno acelera a senescência e a queda de órgãos."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A reciclagem de nutrientes durante a senescência permite:", opcoes:["Perda total de nutrientes","Aumento da transpiração","Reutilização em outras partes da planta","Redução da fotossíntese"], correta:2, explicacao:"Nutrientes são remobilizados para órgãos em crescimento."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A clorose observada na senescência ocorre devido à:", opcoes:["Aumento da clorofila","Produção de ATP","Formação de frutos","Degradação da clorofila"], correta:3, explicacao:"A clorofila é degradada, resultando no amarelamento das folhas."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A morte celular programada em plantas é importante para:", opcoes:["Desenvolvimento e adaptação","Apenas destruição celular","Redução da fotossíntese","Produção de sementes"], correta:0, explicacao:"É essencial para processos como formação de tecidos e resposta a estresses."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"O atraso da senescência pode ser promovido por:", opcoes:["Citocininas","Etileno","ABA","Auxinas"], correta:1, explicacao:"Citocininas retardam a senescência ao manter a atividade metabólica."},
-
-{materia:"Fisiologia vegetal", assunto:"Senescência e morte programada", pergunta:"A abscisão de frutos pode ser influenciada por:", opcoes:["Baixa umidade apenas","Produção de clorofila","Ação hormonal como etileno","Ausência de nutrientes"], correta:2, explicacao:"O etileno regula a abscisão de frutos, promovendo sua queda."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"Qual é a principal forma pela qual as plantas absorvem nutrientes do solo?", opcoes:["Pela solução do solo","Pela matéria orgânica sólida","Pelos minerais não intemperizados","Pelo ar presente nos poros"], correta:0, explicacao:"As plantas absorvem nutrientes principalmente pela solução do solo, onde os íons estão dissolvidos e disponíveis para as raízes."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"A função do intemperismo químico no solo está diretamente relacionada a:", opcoes:["Redução da porosidade","Formação de água no solo","Liberação de nutrientes dos minerais","Compactação das partículas"], correta:2, explicacao:"O intemperismo químico decompõe minerais das rochas, liberando nutrientes como K, Ca e Mg para o solo."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"A matéria orgânica do solo contribui para o fornecimento de nutrientes principalmente por meio de:", opcoes:["Compactação das partículas","Mineralização dos compostos orgânicos","Redução da atividade microbiana","Evaporação da água do solo"], correta:1, explicacao:"A mineralização da matéria orgânica transforma nutrientes orgânicos em formas minerais disponíveis para as plantas."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"Qual nutriente é classificado como macronutriente essencial para as plantas?", opcoes:["Zinco","Boro","Nitrogênio","Cobre"], correta:2, explicacao:"O nitrogênio é um macronutriente essencial, exigido em grandes quantidades pelas plantas para formação de proteínas e clorofila."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"A capacidade do solo de reter e trocar nutrientes com a solução do solo é chamada de:", opcoes:["Capacidade de troca catiônica (CTC)","Condutividade hidráulica","Permeabilidade estrutural","Porosidade total"], correta:0, explicacao:"A CTC representa a capacidade do solo de adsorver e trocar cátions como Ca²⁺, Mg²⁺ e K⁺, sendo fundamental para o fornecimento de nutrientes."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"Solos com maior teor de argila geralmente possuem maior disponibilidade de nutrientes porque:", opcoes:["Possuem mais areia","Retêm mais cátions","Evaporam mais água","São mais rasos"], correta:1, explicacao:"A argila possui alta capacidade de adsorção de cátions, aumentando a retenção e disponibilidade de nutrientes no solo."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"O pH do solo influencia o fornecimento de nutrientes porque:", opcoes:["Aumenta a compactação do solo","Reduz a infiltração de água","Controla a solubilidade dos nutrientes","Elimina a matéria orgânica"], correta:2, explicacao:"O pH controla a solubilidade e disponibilidade dos nutrientes, podendo favorecer ou limitar sua absorção pelas plantas."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"A lixiviação no solo está associada a:", opcoes:["Acúmulo de nutrientes na superfície","Perda de nutrientes pelas águas de percolação","Fixação de fósforo","Aumento da matéria orgânica"], correta:1, explicacao:"A lixiviação é a perda de nutrientes solúveis, como nitrato e potássio, pela água que se move através do perfil do solo."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"O húmus é importante no fornecimento de nutrientes porque:", opcoes:["Aumenta a capacidade de retenção de nutrientes","Diminui a CTC do solo","Impede a atividade microbiana","Reduz a infiltração de água"], correta:0, explicacao:"O húmus aumenta a capacidade de retenção de nutrientes e melhora a CTC, contribuindo para a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Solo como fornecedor de nutrientes", pergunta:"A adubação química tem como objetivo principal:", opcoes:["Reduzir a porosidade do solo","Suprir nutrientes em quantidades adequadas","Eliminar os microrganismos","Aumentar a compactação"], correta:1, explicacao:"A adubação química fornece nutrientes essenciais em quantidades adequadas, complementando o fornecimento natural do solo."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"O pH do solo é definido como:", opcoes:["A quantidade de matéria orgânica presente","A concentração de hidrogênio na solução do solo","A proporção de areia e argila","A quantidade de nutrientes disponíveis"], correta:1, explicacao:"O pH do solo representa a concentração de íons hidrogênio (H+) na solução do solo, indicando sua acidez ou alcalinidade."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Qual dos seguintes elementos é classificado como cátion no solo?", opcoes:["Nitrato (NO3-)","Sulfato (SO4 2-)","Cloreto (Cl-)","Cálcio (Ca2+)"], correta:3, explicacao:"O cálcio (Ca2+) é um cátion, pois possui carga positiva e é adsorvido nos coloides do solo."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Os ânions no solo são caracterizados por:", opcoes:["Possuírem carga negativa","Possuírem carga positiva","Serem retidos fortemente na argila","Não se dissolverem na água"], correta:0, explicacao:"Ânions possuem carga negativa, como nitrato, fosfato e sulfato, e geralmente são mais móveis na solução do solo."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Em solos muito ácidos, é comum ocorrer:", opcoes:["Aumento da disponibilidade de alumínio tóxico","Redução da acidez","Aumento da disponibilidade de cálcio","Eliminação dos cátions"], correta:0, explicacao:"Solos ácidos liberam alumínio (Al3+), que pode se tornar tóxico para as plantas e prejudicar o crescimento radicular."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"O magnésio (Mg2+) no solo é considerado:", opcoes:["Ânion essencial","Cátion trocável","Gás do solo","Componente orgânico"], correta:1, explicacao:"O magnésio é um cátion trocável presente nos coloides do solo e essencial para a formação da clorofila."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"A calagem é uma prática utilizada principalmente para:", opcoes:["Aumentar a acidez do solo","Reduzir o pH e aumentar alumínio","Elevar o pH e neutralizar a acidez","Eliminar os nutrientes do solo"], correta:2, explicacao:"A calagem eleva o pH do solo, neutraliza o alumínio tóxico e aumenta a disponibilidade de nutrientes."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Qual dos seguintes é um ânion importante na nutrição vegetal?", opcoes:["Potássio (K+)","Cálcio (Ca2+)","Amônio (NH4+)","Nitrato (NO3-)"], correta:3, explicacao:"O nitrato (NO3-) é um ânion essencial e uma das principais formas de absorção de nitrogênio pelas plantas."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Os coloides do solo possuem carga negativa principalmente devido a:", opcoes:["Presença de areia","Matéria orgânica e argila","Água no solo","Oxigênio nos poros"], correta:1, explicacao:"Argila e matéria orgânica possuem cargas negativas que permitem a retenção de cátions no solo."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"O fósforo no solo é geralmente encontrado na forma de:", opcoes:["Ânion fosfato","Cátion cálcio","Gás atmosférico","Matéria inerte"], correta:0, explicacao:"O fósforo é absorvido principalmente na forma de ânion fosfato (H2PO4- e HPO4 2-)."},
-
-{materia:"Química do solo", assunto:"Componentes químicos, pH, cátions e ânions", pergunta:"Em solos alcalinos, a disponibilidade de micronutrientes como ferro e manganês tende a:", opcoes:["Aumentar rapidamente","Diminuir devido à precipitação","Não sofrer alteração","Ser substituída por cálcio"], correta:1, explicacao:"Em solos alcalinos, micronutrientes como ferro e manganês precipitam, reduzindo sua disponibilidade para as plantas."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"A matéria orgânica do solo é formada principalmente por:", opcoes:["Fragmentos de rochas e minerais","Resíduos de plantas e organismos em decomposição","Apenas húmus estabilizado","Areia e silte"], correta:1, explicacao:"A matéria orgânica é composta por resíduos vegetais, animais e microrganismos em diferentes estágios de decomposição, incluindo o húmus."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"O húmus no solo é caracterizado por:", opcoes:["Ser facilmente decomposto","Ser uma fração mineral do solo","Ser a parte mais estável da matéria orgânica","Ser formado apenas por raízes vivas"], correta:2, explicacao:"O húmus é a fração mais estável da matéria orgânica, resistente à decomposição e importante para a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"A decomposição da matéria orgânica no solo é realizada principalmente por:", opcoes:["Rochas sedimentares","Microrganismos do solo","Partículas de argila","Água da chuva"], correta:1, explicacao:"Microrganismos como bactérias e fungos são os principais responsáveis pela decomposição da matéria orgânica."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"Durante a decomposição da matéria orgânica ocorre a liberação de:", opcoes:["Apenas água","Minerais insolúveis","Nutrientes indisponíveis","Nutrientes para as plantas"], correta:3, explicacao:"A decomposição promove a mineralização, liberando nutrientes como nitrogênio, fósforo e enxofre na solução do solo."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"A mineralização da matéria orgânica corresponde ao processo de:", opcoes:["Transformação de compostos orgânicos em formas minerais","Formação de novas rochas","Compactação do solo","Perda de água do perfil"], correta:0, explicacao:"Mineralização é a transformação de nutrientes orgânicos em formas minerais disponíveis para as plantas."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"Um dos principais efeitos do húmus na estrutura do solo é:", opcoes:["Desagregar as partículas","Promover agregação e estabilidade estrutural","Reduzir a infiltração de água","Aumentar a compactação"], correta:1, explicacao:"O húmus atua como agente cimentante, promovendo agregação das partículas e melhorando a estrutura do solo."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"A matéria orgânica contribui para a retenção de água no solo porque:", opcoes:["Aumenta a temperatura","Possui alta capacidade de absorção de água","Diminui a porosidade","Elimina os coloides"], correta:1, explicacao:"A matéria orgânica possui elevada capacidade de retenção de água, melhorando a disponibilidade hídrica para as plantas."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"A humificação é o processo de:", opcoes:["Perda de nutrientes do solo","Formação do húmus a partir da decomposição","Compactação das partículas","Transformação de argila em areia"], correta:1, explicacao:"Humificação é a formação de compostos estáveis (húmus) a partir da decomposição da matéria orgânica."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"O aumento da matéria orgânica no solo tende a:", opcoes:["Reduzir a CTC","Diminuir a fertilidade","Aumentar a capacidade de troca catiônica","Eliminar os nutrientes"], correta:2, explicacao:"A matéria orgânica aumenta a CTC, melhorando a retenção de nutrientes e a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Matéria orgânica e húmus", pergunta:"Solos pobres em matéria orgânica geralmente apresentam:", opcoes:["Alta fertilidade natural","Boa agregação estrutural","Baixa retenção de nutrientes","Alta estabilidade do húmus"], correta:2, explicacao:"A baixa matéria orgânica reduz a CTC, a agregação e a retenção de nutrientes, diminuindo a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"A capacidade de troca catiônica (CTC) do solo representa:", opcoes:["A quantidade de água armazenada no solo","A capacidade do solo de reter e trocar cátions","A velocidade de infiltração da água","A quantidade de areia presente"], correta:1, explicacao:"A CTC representa a capacidade do solo de adsorver e trocar cátions como Ca2+, Mg2+, K+ e H+, sendo fundamental para a fertilidade."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"Os principais componentes responsáveis pela CTC do solo são:", opcoes:["Areia e silte","Argila e matéria orgânica","Água e ar do solo","Rochas não intemperizadas"], correta:1, explicacao:"Argila e matéria orgânica possuem cargas negativas que permitem a retenção e troca de cátions no solo."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"Um solo com alta CTC geralmente apresenta:", opcoes:["Baixa retenção de nutrientes","Alta perda por lixiviação","Maior capacidade de armazenar nutrientes","Baixa fertilidade"], correta:2, explicacao:"Solos com alta CTC conseguem reter mais cátions, reduzindo perdas e aumentando a fertilidade."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"Qual dos seguintes cátions está comumente adsorvido nos coloides do solo?", opcoes:["NO3-","Cl-","SO4 2-","K+"], correta:3, explicacao:"O potássio (K+) é um cátion que pode ser adsorvido nos coloides do solo por meio da CTC."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"A CTC é importante para a fertilidade do solo porque:", opcoes:["Permite armazenar nutrientes essenciais","Diminui a atividade microbiana","Impede a infiltração de água","Reduz a matéria orgânica"], correta:0, explicacao:"A CTC permite reter e disponibilizar nutrientes ao longo do tempo, garantindo fertilidade e nutrição vegetal."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"Solos arenosos normalmente apresentam:", opcoes:["Alta CTC","CTC intermediária","Baixa CTC","CTC muito alta"], correta:2, explicacao:"Solos arenosos possuem pouca argila e matéria orgânica, resultando em baixa capacidade de troca catiônica."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"O aumento da matéria orgânica no solo tende a:", opcoes:["Reduzir a CTC","Aumentar a CTC","Eliminar os cátions","Diminuir a fertilidade"], correta:1, explicacao:"A matéria orgânica possui cargas negativas que aumentam a retenção de cátions, elevando a CTC."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"A saturação por bases está relacionada a:", opcoes:["Quantidade de areia no solo","Volume de água no solo","Proporção de ânions","Percentual de cátions básicos na CTC"], correta:3, explicacao:"A saturação por bases indica a proporção de cátions básicos (Ca2+, Mg2+, K+, Na+) ocupando a CTC."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"Em solos com baixa CTC, a adubação deve ser:", opcoes:["Mais frequente e fracionada","Inexistente","Somente orgânica","Aplicada apenas uma vez"], correta:0, explicacao:"Solos com baixa CTC perdem nutrientes rapidamente, exigindo adubações mais frequentes e fracionadas."},
-
-{materia:"Química do solo", assunto:"Capacidade de troca catiônica (CTC)", pergunta:"A calagem pode aumentar a eficiência da CTC porque:", opcoes:["Elimina a argila","Aumenta a areia","Substitui matéria orgânica","Reduz o alumínio e aumenta cátions básicos"], correta:3, explicacao:"A calagem reduz o alumínio e aumenta Ca2+ e Mg2+, melhorando a ocupação da CTC e a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"O pH do solo influencia diretamente a disponibilidade de nutrientes porque:", opcoes:["Controla a solubilidade dos elementos químicos","Aumenta a quantidade de areia","Define a textura do solo","Controla apenas a temperatura"], correta:0, explicacao:"O pH controla a solubilidade e a forma química dos nutrientes, podendo aumentar ou reduzir sua disponibilidade para as plantas."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"Solos com pH abaixo de 5,5 geralmente apresentam:", opcoes:["Alta disponibilidade de cálcio","Alumínio tóxico em solução","Ausência de hidrogênio","Excesso de potássio"], correta:1, explicacao:"Em solos ácidos (pH < 5,5), o alumínio se torna solúvel e pode causar toxidez às plantas."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"A principal finalidade da calagem é:", opcoes:["Aumentar a acidez do solo","Neutralizar a acidez e elevar o pH","Reduzir a matéria orgânica","Aumentar a lixiviação"], correta:1, explicacao:"A calagem neutraliza íons H+ e Al3+, elevando o pH e melhorando a fertilidade do solo."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"O calcário aplicado ao solo atua principalmente fornecendo:", opcoes:["Nitrogênio e fósforo","Enxofre e ferro","Cálcio e magnésio","Potássio e sódio"], correta:2, explicacao:"O calcário fornece Ca2+ e Mg2+, além de neutralizar a acidez do solo."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"Em solos alcalinos, a disponibilidade de micronutrientes como ferro e zinco tende a:", opcoes:["Aumentar","Diminuir","Não se alterar","Ser eliminada completamente"], correta:1, explicacao:"Em pH elevado, micronutrientes precipitam e ficam menos disponíveis para as plantas."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"A acidez potencial do solo está associada principalmente a:", opcoes:["Íons H+ e Al3+ adsorvidos","Areia e silte","Oxigênio no solo","Matéria orgânica fresca"], correta:0, explicacao:"A acidez potencial refere-se aos íons H+ e Al3+ presentes nos coloides do solo que podem ser liberados na solução."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"O pH considerado ideal para a maioria das culturas agrícolas está geralmente entre:", opcoes:["3,0 e 4,0","4,0 e 5,0","5,5 e 6,5","7,5 e 8,5"], correta:2, explicacao:"A maioria das culturas se desenvolve melhor em pH entre 5,5 e 6,5, onde há maior disponibilidade de nutrientes."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"A neutralização da acidez do solo ocorre quando o calcário:", opcoes:["Libera alumínio","Remove água do solo","Forma areia","Reage com H+ e Al3+"], correta:3, explicacao:"O calcário reage com H+ e Al3+, reduzindo a acidez e elevando o pH do solo."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"A aplicação excessiva de calcário pode causar:", opcoes:["Alcalinização do solo","Aumento da acidez","Aumento do alumínio","Redução do cálcio"], correta:0, explicacao:"O excesso de calcário pode elevar demais o pH, reduzindo a disponibilidade de micronutrientes."},
-
-{materia:"Química do solo", assunto:"Reações ácido-base e pH do solo", pergunta:"A correção da acidez do solo deve ser baseada principalmente em:", opcoes:["Cor do solo","Tipo de planta","Análise química do solo","Quantidade de chuva"], correta:2, explicacao:"A análise química do solo permite determinar o pH, CTC e necessidade de calagem, garantindo correção adequada."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"A salinidade do solo refere-se principalmente a:", opcoes:["Presença excessiva de sais solúveis","Alta quantidade de matéria orgânica","Baixa concentração de nutrientes","Excesso de argila"], correta:0, explicacao:"Salinidade do solo é caracterizada pelo acúmulo de sais solúveis, como cloretos e sulfatos de sódio, cálcio e magnésio, que afetam o crescimento das plantas."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"O principal efeito da salinidade elevada sobre as plantas é:", opcoes:["Aumento da absorção de água","Redução do estresse hídrico","Dificuldade de absorção de água pelas raízes","Aumento da fotossíntese"], correta:2, explicacao:"O excesso de sais reduz o potencial osmótico da solução do solo, dificultando a absorção de água pelas raízes."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"Solos salinos geralmente apresentam:", opcoes:["Alta concentração de sais solúveis","Baixa condutividade elétrica","Ausência de íons","pH sempre neutro"], correta:0, explicacao:"Solos salinos possuem elevada concentração de sais solúveis, refletida em alta condutividade elétrica."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"A condutividade elétrica do solo é utilizada para:", opcoes:["Medir a textura do solo","Determinar a salinidade","Avaliar a cor do solo","Medir a compactação"], correta:1, explicacao:"A condutividade elétrica indica a quantidade de sais dissolvidos, sendo um indicador da salinidade do solo."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"O sódio em excesso no solo pode causar:", opcoes:["Melhora da estrutura do solo","Dispersão das partículas e compactação","Aumento da agregação","Maior infiltração de água"], correta:1, explicacao:"O excesso de sódio provoca dispersão das partículas de argila, prejudicando a estrutura e a infiltração de água."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"Solos sódicos são caracterizados por:", opcoes:["Alta saturação por sódio","Alta matéria orgânica","Baixo pH","Alta concentração de fósforo"], correta:0, explicacao:"Solos sódicos apresentam alta saturação por sódio na CTC, prejudicando a estrutura e o crescimento das plantas."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"O alumínio tóxico no solo é mais comum em:", opcoes:["Solos alcalinos","Solos neutros","Solos ácidos","Solos salinos"], correta:2, explicacao:"Em solos ácidos, o alumínio se torna solúvel e pode causar toxidez às raízes."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"Uma prática comum para reduzir a salinidade do solo é:", opcoes:["Aplicar mais fertilizante","Reduzir a irrigação completamente","Compactar o solo","Lixiviar os sais com água de boa qualidade"], correta:3, explicacao:"A lixiviação com água de boa qualidade remove sais solúveis do perfil do solo."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"A toxicidade por sais pode causar nas plantas:", opcoes:["Murcha e redução do crescimento","Aumento do crescimento radicular","Maior absorção de nutrientes","Aumento da fotossíntese"], correta:0, explicacao:"O excesso de sais causa estresse osmótico, murcha, clorose e redução do crescimento."},
-
-{materia:"Química do solo", assunto:"Salinidade e toxicidade", pergunta:"O gesso agrícola é utilizado em solos sódicos para:", opcoes:["Aumentar a salinidade","Substituir sódio por cálcio","Reduzir a matéria orgânica","Diminuir a CTC"], correta:1, explicacao:"O gesso fornece cálcio, que substitui o sódio nos coloides, melhorando a estrutura e reduzindo os efeitos da sodicidade."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"O principal objetivo da adubação do solo é:", opcoes:["Aumentar a compactação do solo","Suprir nutrientes essenciais às plantas","Reduzir a infiltração de água","Eliminar a matéria orgânica"], correta:1, explicacao:"A adubação tem como objetivo fornecer nutrientes essenciais em quantidades adequadas para o crescimento e desenvolvimento das plantas."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A recomendação de adubação deve ser baseada principalmente em:", opcoes:["Cor do solo","Análise química do solo","Quantidade de chuva","Tipo de trator utilizado"], correta:1, explicacao:"A análise química do solo permite identificar deficiências nutricionais e definir a quantidade correta de fertilizantes."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"Os fertilizantes nitrogenados têm como principal função:", opcoes:["Fornecer nitrogênio para síntese de proteínas","Aumentar a acidez do solo sempre","Reduzir a absorção de água","Substituir o calcário"], correta:0, explicacao:"Fertilizantes nitrogenados fornecem nitrogênio, essencial para a formação de proteínas, clorofila e crescimento vegetal."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A adubação fosfatada é importante principalmente para:", opcoes:["Crescimento radicular e energia celular","Aumento da salinidade","Compactação do solo","Redução da fotossíntese"], correta:0, explicacao:"O fósforo é essencial para o crescimento das raízes, formação de ATP e desenvolvimento inicial das plantas."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A adubação potássica está associada principalmente a:", opcoes:["Controle do balanço hídrico e resistência das plantas","Formação de calcário","Redução da matéria orgânica","Diminuição da fotossíntese"], correta:0, explicacao:"O potássio atua na regulação osmótica, resistência a estresses e equilíbrio hídrico das plantas."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A aplicação excessiva de fertilizantes pode causar:", opcoes:["Melhoria permanente da fertilidade","Ausência de impactos ambientais","Contaminação do solo e da água","Aumento da matéria orgânica"], correta:2, explicacao:"O excesso de fertilizantes pode causar lixiviação de nutrientes, contaminação de águas e salinização do solo."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"O parcelamento da adubação nitrogenada é recomendado porque:", opcoes:["Reduz a lixiviação e aumenta a eficiência","Aumenta a perda de nutrientes","Elimina a necessidade de análise do solo","Substitui a calagem"], correta:0, explicacao:"O parcelamento reduz perdas por lixiviação e melhora o aproveitamento do nitrogênio pelas plantas."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A calagem deve ser aplicada com antecedência ao plantio para:", opcoes:["Reduzir a infiltração de água","Permitir reação do calcário no solo","Aumentar a salinidade","Eliminar nutrientes"], correta:1, explicacao:"O calcário precisa de tempo para reagir com o solo e neutralizar a acidez antes do plantio."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"A adubação orgânica contribui principalmente para:", opcoes:["Aumentar a matéria orgânica e melhorar a fertilidade","Eliminar os microrganismos","Reduzir a CTC","Diminuir a retenção de água"], correta:0, explicacao:"A adubação orgânica melhora a estrutura, aumenta a matéria orgânica e favorece a retenção de nutrientes."},
-
-{materia:"Química do solo", assunto:"Adubação e correção do solo", pergunta:"O princípio do manejo racional de fertilizantes envolve:", opcoes:["Aplicar sempre a mesma dose","Aplicar sem análise do solo","Aplicar apenas fertilizantes orgânicos","Aplicar a dose correta no momento adequado"], correta:3, explicacao:"O manejo racional envolve dose, fonte, época e local corretos, garantindo eficiência e sustentabilidade."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"Os microrganismos do solo contribuem para a fertilidade principalmente por meio de:", opcoes:["Compactação das partículas","Mineralização da matéria orgânica","Redução da água no solo","Formação de areia"], correta:1, explicacao:"Microrganismos realizam a decomposição e mineralização da matéria orgânica, liberando nutrientes disponíveis para as plantas."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A fixação biológica de nitrogênio é um processo realizado por:", opcoes:["Rochas do solo","Bactérias específicas","Partículas de argila","Água da chuva"], correta:1, explicacao:"Bactérias como Rhizobium e Azotobacter convertem o N2 atmosférico em formas assimiláveis pelas plantas."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"As bactérias nitrificantes atuam no processo de:", opcoes:["Transformação de amônio em nitrato","Fixação de fósforo","Formação de húmus estável","Redução da acidez"], correta:0, explicacao:"Bactérias nitrificantes oxidam o amônio (NH4+) em nitrito e depois nitrato (NO3-), tornando o nitrogênio disponível."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"As micorrizas são importantes porque:", opcoes:["Reduzem a absorção de nutrientes","Aumentam a absorção de fósforo","Eliminam microrganismos","Compactam o solo"], correta:1, explicacao:"Micorrizas aumentam a área de absorção das raízes e facilitam a absorção de fósforo e outros nutrientes."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A desnitrificação é um processo que:", opcoes:["Converte nitrato em gás nitrogênio","Aumenta o fósforo no solo","Forma húmus","Aumenta a CTC"], correta:0, explicacao:"Na desnitrificação, bactérias transformam nitrato em N2 ou N2O, reduzindo o nitrogênio disponível no solo."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A atividade microbiana no solo é favorecida principalmente por:", opcoes:["Baixa umidade e ausência de matéria orgânica","Alta temperatura extrema","Presença de matéria orgânica e umidade adequada","Excesso de sais"], correta:2, explicacao:"Microrganismos necessitam de matéria orgânica, água e condições adequadas para se desenvolver e atuar no solo."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"Os fungos do solo têm papel importante na:", opcoes:["Decomposição de resíduos orgânicos","Formação de areia","Redução da água","Eliminação de nutrientes"], correta:0, explicacao:"Fungos decompõem resíduos orgânicos complexos, liberando nutrientes e contribuindo para a formação de húmus."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A solubilização de fósforo por microrganismos ocorre quando:", opcoes:["Transformam fósforo solúvel em insolúvel","Produzem ácidos orgânicos que liberam fósforo","Eliminam a matéria orgânica","Reduzem o pH para zero"], correta:1, explicacao:"Microrganismos produzem ácidos orgânicos que solubilizam fosfatos, tornando o fósforo disponível."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A rizosfera é definida como:", opcoes:["Região do solo influenciada pelas raízes","Camada profunda do solo","Horizonte rochoso","Área sem microrganismos"], correta:0, explicacao:"A rizosfera é a região ao redor das raízes onde há intensa atividade microbiológica e química."},
-
-{materia:"Química do solo", assunto:"Interações químicas e microbiológicas", pergunta:"A inoculação de bactérias fixadoras de nitrogênio em culturas agrícolas tem como objetivo:", opcoes:["Reduzir a matéria orgânica","Eliminar fungos","Substituir a água","Aumentar a disponibilidade de nitrogênio"], correta:3, explicacao:"A inoculação aumenta a fixação biológica de nitrogênio, reduzindo a necessidade de fertilizantes nitrogenados."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A análise química do solo tem como principal objetivo:", opcoes:["Determinar a cor do solo","Avaliar a fertilidade e disponibilidade de nutrientes","Identificar apenas a textura","Medir a compactação"], correta:1, explicacao:"A análise química do solo permite avaliar pH, nutrientes, CTC e acidez, orientando o manejo e a adubação."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A amostragem de solo deve ser realizada preferencialmente:", opcoes:["Em apenas um ponto da área","De forma aleatória sem critério","Em vários pontos representativos da área","Somente após a colheita"], correta:2, explicacao:"A coleta em vários pontos representativos garante que a amostra represente corretamente a área analisada."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A profundidade mais comum para amostragem em áreas agrícolas é:", opcoes:["0 a 20 cm","40 a 60 cm","60 a 80 cm","1 metro"], correta:0, explicacao:"A camada de 0 a 20 cm corresponde à zona de maior atividade radicular e manejo agrícola."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A amostra composta de solo é formada por:", opcoes:["Uma única amostra profunda","Mistura de várias subamostras","Apenas solo superficial","Solo de diferentes regiões sem mistura"], correta:1, explicacao:"A amostra composta é obtida pela mistura de várias subamostras, representando melhor a área."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"O intervalo recomendado para análise de solo em áreas cultivadas geralmente é:", opcoes:["A cada 2 a 3 anos","A cada 10 anos","Somente uma vez","Apenas quando a planta morre"], correta:0, explicacao:"A análise periódica a cada 2 a 3 anos permite acompanhar a fertilidade e ajustar o manejo."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"O pH, a CTC e a saturação por bases são parâmetros importantes porque:", opcoes:["Definem apenas a textura","Indicam a fertilidade e necessidade de correção","Mostram a cor do solo","Medem a compactação"], correta:1, explicacao:"Esses parâmetros permitem avaliar a fertilidade, acidez e necessidade de calagem e adubação."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A interpretação correta da análise de solo permite:", opcoes:["Aplicar fertilizantes de forma adequada","Eliminar a matéria orgânica","Reduzir a produtividade","Aumentar a acidez"], correta:0, explicacao:"A interpretação orienta o manejo nutricional e evita desperdício de fertilizantes."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"O manejo sustentável do solo envolve:", opcoes:["Uso excessivo de fertilizantes","Aplicação sem análise química","Correção e adubação racional","Eliminação da matéria orgânica"], correta:2, explicacao:"O manejo sustentável busca equilibrar correção, adubação e conservação do solo."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A coleta de solo deve evitar áreas como:", opcoes:["Locais representativos","Áreas homogêneas","Bordas de estrada e locais atípicos","Talhões uniformes"], correta:2, explicacao:"Áreas atípicas podem distorcer os resultados da análise e devem ser evitadas."},
-
-{materia:"Química do solo", assunto:"Monitoramento e análise química do solo", pergunta:"A análise química do solo contribui para a sustentabilidade porque:", opcoes:["Aumenta o desperdício de fertilizantes","Permite uso racional dos nutrientes","Elimina a necessidade de manejo","Substitui a irrigação"], correta:1, explicacao:"A análise permite aplicar apenas o necessário, reduzindo impactos ambientais e custos de produção."}
-
-
+{materia:"Eletricidade Aplicada", assunto:"Introdução à Eletricidade Aplicada", pergunta:"A eletricidade pode ser definida corretamente como:", opcoes:["Movimento de ondas sonoras em condutores","Fluxo de cargas elétricas em um meio condutor","Movimento de energia térmica no ar","Transferência de energia mecânica entre corpos"], correta:1, explicacao:"Eletricidade é o fluxo de cargas elétricas através de um condutor."}
 
 ]
 
@@ -892,216 +233,231 @@ let atual=0
 let pontos=0
 let respondido=false
 
-// CRIAR MENU MATÉRIAS COM BARRA DE PESQUISA
+function comecarQuiz(){
+document.getElementById("inicio").style.display="none"
+document.getElementById("menu").style.display="block"
+criarMenuMaterias()
+}
+
 function criarMenuMaterias(){
-  let menu=document.getElementById("menu")
-  menu.innerHTML = `
-    <div class="barra-pesquisa">
-      <input type="text" id="pesquisaInput" placeholder="Pesquisar matéria, assunto ou pergunta...">
-      <button onclick="pesquisarQuestoes()">Pesquisar</button>
-      <button onclick="limparBusca()">Limpar</button>
-    </div>
-    <h2 style='font-size:32px'>Escolha a matéria</h2>
-  `
-  
-  let materias=[...new Set(banco.map(p=>p.materia))]
+let menu=document.getElementById("menu")
+menu.innerHTML = `
+<div class="barra-pesquisa">
+<input type="text" id="pesquisaInput" placeholder="Pesquisar matéria, assunto ou pergunta...">
+<button onclick="pesquisarQuestoes()">Pesquisar</button>
+<button onclick="limparBusca()">Limpar</button>
+</div>
+<h2 style='font-size:32px'>Escolha a matéria</h2>
+`
 
-  materias.forEach(function(m){
-    let botao=document.createElement("div")
-    botao.className="temaBtn"
-    botao.innerText=m
+let materias=[...new Set(banco.map(p=>p.materia))]
 
-    botao.onclick=function(){
-      materiaSelecionada=m
-      document.querySelectorAll(".temaBtn").forEach(b=>{
-        b.classList.remove("selecionadaMenu")
-      })
-      botao.classList.add("selecionadaMenu")
-    }
+materias.forEach(function(m){
+let botao=document.createElement("div")
+botao.className="temaBtn"
+botao.innerText=m
 
-    menu.appendChild(botao)
-  })
-
-  let confirmar=document.createElement("button")
-  confirmar.innerText="Confirmar matéria"
-  confirmar.onclick=function(){
-    if(materiaSelecionada){
-      criarMenuAssuntos(materiaSelecionada)
-    }else{
-      alert("Selecione uma matéria")
-    }
-  }
-  menu.appendChild(confirmar)
+botao.onclick=function(){
+materiaSelecionada=m
+document.querySelectorAll(".temaBtn").forEach(b=>{
+b.classList.remove("selecionadaMenu")
+})
+botao.classList.add("selecionadaMenu")
 }
 
-// MENU ASSUNTOS
+menu.appendChild(botao)
+})
+
+let confirmar=document.createElement("button")
+confirmar.innerText="Confirmar matéria"
+confirmar.onclick=function(){
+if(materiaSelecionada){
+criarMenuAssuntos(materiaSelecionada)
+}else{
+alert("Selecione uma matéria")
+}
+}
+menu.appendChild(confirmar)
+}
+
 function criarMenuAssuntos(materia){
-  let menu=document.getElementById("menu")
-  let assuntos=[...new Set(banco.filter(p=>p.materia===materia).map(p=>p.assunto))]
-  menu.innerHTML="<h2 style='font-size:28px'>"+materia+"</h2><p>Escolha o assunto</p>"
-  assuntos.forEach(function(a){
-    let botao=document.createElement("div")
-    botao.className="temaBtn"
-    botao.innerText=a
+let menu=document.getElementById("menu")
+let assuntos=[...new Set(banco.filter(p=>p.materia===materia).map(p=>p.assunto))]
+menu.innerHTML="<h2 style='font-size:28px'>"+materia+"</h2><p>Escolha o assunto</p>"
 
-    botao.onclick=function(){
-      assuntoSelecionado=a
-      document.querySelectorAll(".temaBtn").forEach(b=>{
-        b.classList.remove("selecionadaMenu")
-      })
-      botao.classList.add("selecionadaMenu")
-    }
-    menu.appendChild(botao)
-  })
-  let confirmar=document.createElement("button")
-  confirmar.innerText="Confirmar assunto"
-  confirmar.onclick=function(){
-    if(materiaSelecionada && assuntoSelecionado){
-      iniciarQuiz(materiaSelecionada,assuntoSelecionado)
-    }else{
-      alert("Selecione matéria e assunto")
-    }
-  }
-  menu.appendChild(confirmar)
-  let voltar=document.createElement("button")
-  voltar.innerText="Voltar"
-  voltar.onclick=function(){ criarMenuMaterias() }
-  menu.appendChild(voltar)
+assuntos.forEach(function(a){
+let botao=document.createElement("div")
+botao.className="temaBtn"
+botao.innerText=a
+
+botao.onclick=function(){
+assuntoSelecionado=a
+document.querySelectorAll(".temaBtn").forEach(b=>{
+b.classList.remove("selecionadaMenu")
+})
+botao.classList.add("selecionadaMenu")
+}
+menu.appendChild(botao)
+})
+
+let confirmar=document.createElement("button")
+confirmar.innerText="Confirmar assunto"
+confirmar.onclick=function(){
+if(materiaSelecionada && assuntoSelecionado){
+iniciarQuiz(materiaSelecionada,assuntoSelecionado)
+}else{
+alert("Selecione matéria e assunto")
+}
+}
+menu.appendChild(confirmar)
+
+let voltar=document.createElement("button")
+voltar.innerText="Voltar"
+voltar.onclick=function(){ criarMenuMaterias() }
+menu.appendChild(voltar)
 }
 
-// PESQUISAR QUESTÕES
 function pesquisarQuestoes(){
-  let termo=document.getElementById("pesquisaInput").value.toLowerCase()
-  let resultados=banco.filter(p=>{
-    return p.pergunta.toLowerCase().includes(termo) ||
-           p.assunto.toLowerCase().includes(termo) ||
-           p.materia.toLowerCase().includes(termo)
-  })
-  if(resultados.length===0){
-    alert("Nenhuma questão encontrada")
-    return
-  }
-  perguntas=resultados
-  atual=0
-  pontos=0
-  document.getElementById("menu").style.display="none"
-  document.getElementById("quiz").style.display="block"
-  carregar()
+let termo=document.getElementById("pesquisaInput").value.toLowerCase()
+let resultados=banco.filter(p=>{
+return p.pergunta.toLowerCase().includes(termo) ||
+p.assunto.toLowerCase().includes(termo) ||
+p.materia.toLowerCase().includes(termo)
+})
+
+if(resultados.length===0){
+alert("Nenhuma questão encontrada")
+return
+}
+
+perguntas=resultados
+atual=0
+pontos=0
+
+document.getElementById("menu").style.display="none"
+document.getElementById("quiz").style.display="block"
+
+carregar()
 }
 
 function limparBusca(){
-  document.getElementById("pesquisaInput").value=""
+document.getElementById("pesquisaInput").value=""
 }
 
-// RESTO DO QUIZ
 function iniciarQuiz(materia,assunto){
-  perguntas=banco.filter(p=>p.materia===materia && p.assunto===assunto)
-  embaralhar(perguntas)
-  document.getElementById("menu").style.display="none"
-  document.getElementById("quiz").style.display="block"
-  atual=0
-  pontos=0
-  carregar()
+perguntas=banco.filter(p=>p.materia===materia && p.assunto===assunto)
+embaralhar(perguntas)
+
+document.getElementById("menu").style.display="none"
+document.getElementById("quiz").style.display="block"
+
+atual=0
+pontos=0
+
+carregar()
 }
 
 function carregar(){
-  let p=perguntas[atual]
-  document.getElementById("tema").innerText=p.materia+" → "+p.assunto
-  document.getElementById("pergunta").innerText=p.pergunta
-  for(let i=0;i<4;i++){
-    let op=document.getElementById("op"+i)
-    op.innerText=p.opcoes[i]
-    op.className="opcao"
-    op.onclick=function(){
-      opcaoSelecionada=i
-      document.querySelectorAll(".opcao").forEach(o=>{
-        o.classList.remove("selecionada")
-      })
-      op.classList.add("selecionada")
-    }
-  }
-  document.getElementById("placar").innerText="Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
-  document.getElementById("progresso").style.width=((atual/perguntas.length)*100)+"%"
-  document.getElementById("explicacao").innerText=""
-  respondido=false
-  document.getElementById("btnProxima").style.display="none"
-  document.getElementById("btnConfirmar").style.display="block"
+let p=perguntas[atual]
+
+document.getElementById("tema").innerText=p.materia+" → "+p.assunto
+document.getElementById("pergunta").innerText=p.pergunta
+
+for(let i=0;i<4;i++){
+let op=document.getElementById("op"+i)
+op.innerText=p.opcoes[i]
+op.className="opcao"
+
+op.onclick=function(){
+opcaoSelecionada=i
+document.querySelectorAll(".opcao").forEach(o=>{
+o.classList.remove("selecionada")
+})
+op.classList.add("selecionada")
+}
+}
+
+document.getElementById("placar").innerText="Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
+document.getElementById("progresso").style.width=((atual/perguntas.length)*100)+"%"
+
+document.getElementById("explicacao").innerText=""
+
+respondido=false
+
+document.getElementById("btnProxima").style.display="none"
+document.getElementById("btnConfirmar").style.display="block"
 }
 
 function confirmarResposta(){
-  if(opcaoSelecionada===null) return
-  responder(opcaoSelecionada)
-  opcaoSelecionada=null
-  document.getElementById("btnProxima").style.display="block"
-  document.getElementById("btnConfirmar").style.display="none"
+if(opcaoSelecionada===null) return
+
+responder(opcaoSelecionada)
+
+opcaoSelecionada=null
+
+document.getElementById("btnProxima").style.display="block"
+document.getElementById("btnConfirmar").style.display="none"
 }
 
 function responder(i){
-  if(respondido) return
-  respondido=true
-  let correta=perguntas[atual].correta
-  if(i===correta){
-    document.getElementById("op"+i).classList.add("correta")
-    pontos++
-  }else{
-    document.getElementById("op"+i).classList.add("errada")
-    document.getElementById("op"+correta).classList.add("correta")
-  }
-  document.getElementById("explicacao").innerText="Explicação: "+perguntas[atual].explicacao
+if(respondido) return
+
+respondido=true
+
+let correta=perguntas[atual].correta
+
+if(i===correta){
+document.getElementById("op"+i).classList.add("correta")
+pontos++
+}else{
+document.getElementById("op"+i).classList.add("errada")
+document.getElementById("op"+correta).classList.add("correta")
+}
+
+document.getElementById("explicacao").innerText="Explicação: "+perguntas[atual].explicacao
 }
 
 function proxima(){
-  atual++
-  if(atual>=perguntas.length){
-  alert(
-    "Fim do quiz!\n"+
-    "Matéria: " + materiaSelecionada + "\n" +
-    "Assunto: " + assuntoSelecionado + "\n" +
-    "Acertou " + pontos + " de " + perguntas.length + " perguntas"
-  )
-  location.reload()
-  return
+atual++
+
+if(atual>=perguntas.length){
+alert(
+"Fim do quiz!\n"+
+"Matéria: "+materiaSelecionada+"\n"+
+"Assunto: "+assuntoSelecionado+"\n"+
+"Acertou "+pontos+" de "+perguntas.length+" perguntas"
+)
+location.reload()
+return
 }
-  carregar()
+
+carregar()
 }
 
 function embaralhar(array){
-  for(let i=array.length-1;i>0;i--){
-    let j=Math.floor(Math.random()*(i+1))
-    let temp=array[i]
-    array[i]=array[j]
-    array[j]=temp
-  }
+for(let i=array.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1))
+let temp=array[i]
+array[i]=array[j]
+array[j]=temp
+}
 }
 
 function voltarMenu(){
-  document.getElementById("quiz").style.display="none"
-  document.getElementById("menu").style.display="block"
-  atual=0
-  pontos=0
-  respondido=false
-  opcaoSelecionada=null
-  materiaSelecionada=null
-  assuntoSelecionado=null
-  criarMenuMaterias()
+document.getElementById("quiz").style.display="none"
+document.getElementById("menu").style.display="block"
+
+atual=0
+pontos=0
+respondido=false
+opcaoSelecionada=null
+materiaSelecionada=null
+assuntoSelecionado=null
+
+criarMenuMaterias()
 }
 
-// ABRIR QUIZ AUTOMÁTICO SE HOUVER "fotossíntese"
 window.onload=function(){
-  criarMenuMaterias()
-  // Auto abrir só para "Fotossíntese" dentro de Biologia > Fotossíntese
-  let auto=banco.filter(p=>
-    p.materia==="Biologia" &&
-    p.assunto==="Fotossíntese"
-  )
-  if(auto.length>0){
-    perguntas=auto
-    atual=0
-    pontos=0
-    document.getElementById("menu").style.display="none"
-    document.getElementById("quiz").style.display="block"
-    carregar()
-  }
 }
 </script>
 
