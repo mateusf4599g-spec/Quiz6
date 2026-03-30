@@ -57,8 +57,9 @@ Criado por Matheus<br>
 </div>
 
 <script>
-let usuario="", materiaSelecionada=null, assuntoSelecionado=null, opcaoSelecionada=null;
-let perguntas=[], atual=0, pontos=0, respondido=false, modo=null, semestreSelecionado=null;
+let usuario="", materiaSelecionada=null, assuntoSelecionado=null, opcaoSelecionada=null
+let perguntas=[], atual=0, pontos=0, respondido=false, modo="lista", semestreSelecionado=null
+
 
 // Map de matérias para semestre
 const semestres={
@@ -72,8 +73,6 @@ const semestres={
 "Expressão Gráfica":2,
 "Metodologia Científica e Tecnológica":2,
 "Química Analítica":2,
-
-
 "Bioquímica Vegetal":3,
 "Climatologia":3,
 "Ecologia Florestal":3,
@@ -81,7 +80,6 @@ const semestres={
 "Fisiologia vegetal":3,
 "Gênese, Morfologia e Classificação de Solos":3,
 "Genética Básica":3,
-
 "Anatomia da Madeira":4,
 "Biologia, Produção e Tecnologia de Sementes Florestais":4,
 "Eletricidade Aplicada":4,
@@ -3201,142 +3199,157 @@ btnConfirmar.addEventListener("click", confirmarResposta)
 btnProxima.addEventListener("click", proxima)
 btnVoltar.addEventListener("click", voltarMenu)
 
+// LOGIN
 function entrar(){
   let nome=document.getElementById("nomeUsuario").value.trim()
-  if(!nome){alert("Digite seu nome"); return;}
+  if(nome===""){alert("Digite seu nome");return}
   usuario=nome
-  localStorage.setItem("usuarioQuiz", nome)
+  localStorage.setItem("usuarioQuiz",nome)
   loginDiv.style.display="none"
   menuDiv.style.display="block"
   selecionarModo()
 }
 
 // ESCOLHER MODO
-
 function selecionarModo(){
-  menuDiv.innerHTML="<h1>🌳 Quiz de Engenharia Florestal</h1><h2>Olá "+usuario+"</h2><h3>Escolha como deseja fazer o quiz:</h3>"
+  menuDiv.innerHTML=
+    "<h1>🌳 Quiz de Engenharia Florestal</h1>"+
+    "<h2>Olá "+usuario+"</h2>"+
+    "<h3>Escolha como deseja fazer o quiz:</h3>"+
+    "<p>Por semestre <span style='font-size:14px'>(fazer matérias por semestre)</span></p>"+
+    "<p>Por lista de matérias <span style='font-size:14px'>(fazer matérias em lista)</span></p>"
 
   let btnSemestre=document.createElement("div")
   btnSemestre.className="temaBtn"
-
-  btnSemestre.innerHTML = "Por semestre <span style='font-size:16px; opacity:0.8;'>(fazer matérias por semestre)</span>";
-
-  btnSemestre.onclick=function(){modo="semestre"; selecionarBotao(btnSemestre)}
+  btnSemestre.innerText="Por semestre"
+  btnSemestre.onclick=function(){
+    modo="semestre"
+    Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+    btnSemestre.classList.add("selecionadaMenu")
+  }
+  menuDiv.appendChild(btnSemestre)
 
   let btnLista=document.createElement("div")
   btnLista.className="temaBtn"
-
-  btnLista.innerHTML = "Por lista de matérias <span style='font-size:16px; opacity:0.8;'>(fazer matérias em lista)</span>";
-
-  btnLista.onclick=function(){modo="lista"; selecionarBotao(btnLista)}
-
-  menuDiv.appendChild(btnSemestre)
+  btnLista.innerText="Por lista de matérias"
+  btnLista.onclick=function(){
+    modo="lista"
+    Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+    btnLista.classList.add("selecionadaMenu")
+  }
   menuDiv.appendChild(btnLista)
 
   let confirmar=document.createElement("button")
   confirmar.innerText="Confirmar"
   confirmar.onclick=function(){
-    if(!modo){alert("Selecione um modo"); return;}
-    if(modo==="semestre"){escolherSemestre();}
-    else{criarMenuMaterias();}
+    if(!modo){
+      alert("Selecione um modo")
+      return
+    }
+    if(modo==="semestre") escolherSemestre()
+    else criarMenuMaterias()
   }
   menuDiv.appendChild(confirmar)
 
   let zerar=document.createElement("button")
   zerar.innerText="Zerar usuário (exclui nome e progresso)"
   zerar.style.marginTop="40px"
-  zerar.onclick=function(){if(confirm("Deseja realmente apagar o usuário e o progresso?")){localStorage.clear(); location.reload();}}
+  zerar.onclick=function(){
+    if(confirm("Deseja realmente apagar o usuário e o progresso?")){
+      localStorage.clear()
+      location.reload()
+    }
+  }
   menuDiv.appendChild(zerar)
 }
-
-function selecionarBotao(botao){
-  Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
-  botao.classList.add("selecionadaMenu")
-}
-
 
 // ESCOLHER SEMESTRE
 function escolherSemestre(){
   menuDiv.innerHTML =
     "<h1>🌳 Quiz de Engenharia Florestal</h1>" +
     "<h2>Olá " + usuario + "</h2>" +
-    // CAIXA FIXA MOSTRANDO O MODO
-    "<div style='background:#334155;color:white;padding:10px;border-radius:8px;text-align:center;font-size:18px;margin-bottom:15px;'>Por Semestre</div>" +
     "<h3>Escolha o semestre</h3>"
 
-let semestresUnicos = [...new Set(Object.values(semestres))].sort((a,b)=>a-b)
+  let semestresUnicos = [...new Set(Object.values(semestres))]
+  semestresUnicos.sort((a,b)=>a-b)
 
   semestresUnicos.forEach(s=>{
-    let botao=document.createElement("div")
-    botao.className="temaBtn"
+    let botao = document.createElement("div")
+    botao.className = "temaBtn"
 
-    let materiasSemestre = Object.keys(semestres).filter(m=>semestres[m]===s)
-    let total=0, acertos=0
+    let materiasSemestre = Object.keys(semestres).filter(m => semestres[m] === s)
+    let totalQuestoes = banco.filter(p => materiasSemestre.includes(p.materia)).length
+    let acertos = 0
     materiasSemestre.forEach(m=>{
-      let assuntos=[...new Set(banco.filter(p=>p.materia===m).map(p=>p.assunto))]
-      assuntos.forEach(a=>{
-        total += banco.filter(p=>p.materia===m && p.assunto===a).length
-        let salvo=localStorage.getItem(m+"-"+a)
-        if(salvo) acertos+=JSON.parse(salvo).acertos
+      [...new Set(banco.filter(p=>p.materia===m).map(p=>p.assunto))].forEach(a=>{
+        let salvo = localStorage.getItem(m+"-"+a)
+        if(salvo) acertos += JSON.parse(salvo).acertos
       })
     })
-    let porcentagem=(total>0)?(acertos/total)*100:0
-
-    botao.innerHTML="<div style='font-size:22px'>"+s+"º Semestre</div>"+
-                    "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
-
-    botao.onclick=function(){semestreSelecionado=s; selecionarBotao(botao)}
+    let porcentagem = totalQuestoes>0 ? (acertos/totalQuestoes)*100 : 0
+    botao.innerHTML = "<div style='font-size:22px'>" + s + "º Semestre</div>" +
+                      "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
+    botao.onclick = function(){
+      semestreSelecionado = s
+      Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+      botao.classList.add("selecionadaMenu")
+    }
     menuDiv.appendChild(botao)
   })
 
-  let confirmar=document.createElement("button")
-  confirmar.innerText="Confirmar semestre"
-  confirmar.onclick=function(){
-    if(!semestreSelecionado){alert("Selecione um semestre"); return;}
+  let confirmar = document.createElement("button")
+  confirmar.innerText = "Confirmar semestre"
+  confirmar.onclick = function(){
+    if(semestreSelecionado==null){alert("Selecione um semestre");return}
     criarMenuMaterias()
   }
   menuDiv.appendChild(confirmar)
 
-  let voltar=document.createElement("button")
-  voltar.innerText="Voltar"
-  voltar.onclick=function(){selecionarModo()}
+  let voltar = document.createElement("button")
+  voltar.innerText = "Voltar"
+  voltar.onclick = function(){selecionarModo()}
   menuDiv.appendChild(voltar)
 }
 
-
 // CRIAR MENU DE MATÉRIAS
 function criarMenuMaterias(){
-  menuDiv.innerHTML =
-    "<h1>🌳 Quiz de Engenharia Florestal</h1>" +
-    "<h2>Olá " + usuario + "</h2>" +"<h3>Escolha a matéria</h3>"
-
-
-  let materias=[...new Set(banco.map(p=>p.materia))]
-  if(modo==="semestre") materias=materias.filter(m=>semestres[m]===semestreSelecionado)
+  menuDiv.innerHTML="<h1>🌳 Quiz de Engenharia Florestal</h1><h3>Escolha o assunto</h3>"
+  let materias = [...new Set(banco.map(p=>p.materia))]
+  if(modo==="semestre") materias = materias.filter(m=>semestres[m]===semestreSelecionado)
 
   materias.forEach(m=>{
     let botao=document.createElement("div")
     botao.className="temaBtn"
-    let totalQuestoesMateria=banco.filter(p=>p.materia===m).length
-    let acertosUsuario=0
+    let totalQuestoesMateria = banco.filter(p=>p.materia===m).length
+    let acertosUsuario = 0
     let assuntos=[...new Set(banco.filter(p=>p.materia===m).map(p=>p.assunto))]
-    assuntos.forEach(a=>{let salvo=localStorage.getItem(m+"-"+a); if(salvo) acertosUsuario+=JSON.parse(salvo).acertos})
-    let porcentagem=(totalQuestoesMateria>0)?(acertosUsuario/totalQuestoesMateria)*100:0
-    botao.innerHTML="<div style='font-size:22px'>"+m+"</div>"+
-                    "<div style='font-size:16px;opacity:0.8'>Progresso: "+acertosUsuario+" de "+totalQuestoesMateria+" questões corretas</div>"+
-                    "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
-    botao.onclick=function(){materiaSelecionada=m; selecionarBotao(botao)}
+    assuntos.forEach(a=>{
+      let salvo=localStorage.getItem(m+"-"+a)
+      if(salvo) acertosUsuario += JSON.parse(salvo).acertos
+    })
+    let porcentagem = totalQuestoesMateria>0 ? (acertosUsuario/totalQuestoesMateria)*100 : 0
+    botao.innerHTML = "<div style='font-size:22px'>"+m+"</div>"+
+                      "<div style='font-size:16px;opacity:0.8'>Progresso: "+acertosUsuario+" de "+totalQuestoesMateria+" questões corretas</div>"+
+                      "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
+    botao.onclick = function(){
+      materiaSelecionada = m
+      Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+      botao.classList.add("selecionadaMenu")
+    }
     menuDiv.appendChild(botao)
   })
 
   let confirmar=document.createElement("button")
   confirmar.innerText="Confirmar matéria"
-  confirmar.onclick=function(){if(!materiaSelecionada){alert("Selecione uma matéria"); return;} criarMenuAssuntos(materiaSelecionada)}
+  confirmar.onclick=function(){
+    if(!materiaSelecionada){alert("Selecione uma matéria");return}
+    criarMenuAssuntos(materiaSelecionada)
+  }
   menuDiv.appendChild(confirmar)
 
   let voltar=document.createElement("button")
   voltar.innerText="Voltar"
-  voltar.onclick=function(){if(modo==="lista") selecionarModo(); else escolherSemestre()}
+  voltar.onclick=function(){modo==="lista"?selecionarModo():escolherSemestre()}
   menuDiv.appendChild(voltar)
 }
 
@@ -3344,23 +3357,33 @@ function criarMenuMaterias(){
 function criarMenuAssuntos(materia){
   menuDiv.innerHTML="<h1>🌳 Quiz de Engenharia Florestal</h1><h3>Escolha o assunto</h3>"
   let assuntos=[...new Set(banco.filter(p=>p.materia===materia).map(p=>p.assunto))]
+
   assuntos.forEach(a=>{
     let botao=document.createElement("div")
     botao.className="temaBtn"
-    let total=banco.filter(p=>p.materia===materia && p.assunto===a).length
-    let salvo=localStorage.getItem(materia+"-"+a)
-    let acertos=salvo?JSON.parse(salvo).acertos:0
-    let porcentagem=(total>0)?(acertos/total)*100:0
+    let totalQuestoesAssunto=banco.filter(p=>p.materia===materia && p.assunto===a).length
+    let chave=materia+"-"+a
+    let salvo=localStorage.getItem(chave)
+    let acertos=0
+    if(salvo) acertos=JSON.parse(salvo).acertos
+    let porcentagem = totalQuestoesAssunto>0 ? (acertos/totalQuestoesAssunto)*100 : 0
     botao.innerHTML="<div style='font-size:22px'>"+a+"</div>"+
-                    "<div style='font-size:16px;opacity:0.8'>Progresso: "+acertos+" de "+total+" questões corretas</div>"+
+                    "<div style='font-size:16px;opacity:0.8'>Progresso: "+acertos+" de "+totalQuestoesAssunto+" questões corretas</div>"+
                     "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
-    botao.onclick=function(){assuntoSelecionado=a; selecionarBotao(botao)}
+    botao.onclick=function(){
+      assuntoSelecionado=a
+      Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+      botao.classList.add("selecionadaMenu")
+    }
     menuDiv.appendChild(botao)
   })
 
   let confirmar=document.createElement("button")
   confirmar.innerText="Confirmar assunto"
-  confirmar.onclick=function(){if(!assuntoSelecionado){alert("Selecione um assunto"); return;} iniciarQuiz()}
+  confirmar.onclick=function(){
+    if(!assuntoSelecionado){alert("Selecione um assunto");return}
+    iniciarQuiz()
+  }
   menuDiv.appendChild(confirmar)
 
   let voltar=document.createElement("button")
@@ -3369,74 +3392,52 @@ function criarMenuAssuntos(materia){
   menuDiv.appendChild(voltar)
 }
 
-
-
 // INICIAR QUIZ
 function iniciarQuiz(){
   perguntas=banco.filter(p=>p.materia===materiaSelecionada && p.assunto===assuntoSelecionado)
   atual=0
   pontos=0
+  // reset do progresso do assunto para salvar só as novas tentativas
+  let chave = materiaSelecionada + "-" + assuntoSelecionado
+  localStorage.setItem(chave, JSON.stringify({acertos:0, respondidas:[]}))
+
   menuDiv.style.display="none"
   quizDiv.style.display="block"
   mostrarPergunta()
 }
 
-
-
-
 // MOSTRAR PERGUNTA
 function mostrarPergunta(){
-  let p = perguntas[atual]
-
-  // atualiza texto de progresso e pontos
-  document.getElementById("tema").innerText = 
-    "Pergunta " + (atual+1) + " de " + perguntas.length + 
-    "\n" + materiaSelecionada + " → " + assuntoSelecionado
+  let p=perguntas[atual]
+  document.getElementById("tema").innerText = `Pergunta ${atual+1} de ${perguntas.length} | Pontos: ${pontos}\n${materiaSelecionada} → ${assuntoSelecionado}`
   document.getElementById("pergunta").innerText = p.pergunta
-
-  // limpa explicação
   document.getElementById("explicacao").innerText = ""
+  btnConfirmar.style.display="block"
+  btnProxima.style.display="none"
+  opcaoSelecionada=null
 
-  // preenche opções
   p.opcoes.forEach((op,i)=>{
     let el=document.getElementById("op"+i)
-    el.innerText = op
-    el.className = "opcao"
-    el.style.pointerEvents = "auto" // libera clique
-
+    el.innerText=op
+    el.className="opcao"
+    el.style.pointerEvents="auto"
     el.onclick=function(){
-      opcaoSelecionada = i
+      opcaoSelecionada=i
       Array.from(document.querySelectorAll(".opcao")).forEach(o=>o.classList.remove("selecionada"))
       el.classList.add("selecionada")
     }
   })
-
-  // exibe botão confirmar e esconde próximo
-  btnConfirmar.style.display="block"
-  btnProxima.style.display="none"
-
-  // reseta seleção
-  opcaoSelecionada = null
 }
-
-
-
-
 
 // CONFIRMAR RESPOSTA
 function confirmarResposta(){
   if(opcaoSelecionada===null){alert("Selecione uma opção"); return;}
   let p = perguntas[atual]
   let chave = materiaSelecionada + "-" + assuntoSelecionado
-
-  // pegar dados salvos
   let dados = localStorage.getItem(chave) ? JSON.parse(localStorage.getItem(chave)) : {acertos:0, respondidas:[]} 
-
-  // verifica se essa pergunta já foi respondida antes
   let perguntaId = atual
   let jaRespondida = dados.respondidas.includes(perguntaId)
 
-  // cores das respostas
   p.opcoes.forEach((op,i)=>{
     let el=document.getElementById("op"+i)
     el.style.pointerEvents="none"
@@ -3444,7 +3445,6 @@ function confirmarResposta(){
     else if(i===opcaoSelecionada) el.classList.add("errada")
   })
 
-  // atualiza acertos apenas se não foi respondida antes
   if(!jaRespondida){
     if(opcaoSelecionada===p.correta) pontos++
     dados.respondidas.push(perguntaId)
@@ -3452,80 +3452,23 @@ function confirmarResposta(){
     localStorage.setItem(chave, JSON.stringify(dados))
   }
 
-  // mostra explicação
   document.getElementById("explicacao").innerText = "Explicação: " + p.explicacao
-
-  // troca botões
   btnConfirmar.style.display="none"
   btnProxima.style.display="block"
 }
 
-
-
-// CONFIRMAR RESPOSTA
-
-
-
-
-function confirmarResposta(){
-  if(opcaoSelecionada===null){alert("Selecione uma opção"); return;}
-  let p = perguntas[atual]
-  let chave = materiaSelecionada + "-" + assuntoSelecionado
-
-  // pegar dados salvos
-  let dados = localStorage.getItem(chave) ? JSON.parse(localStorage.getItem(chave)) : {acertos:0, respondidas:[]} 
-
-  // verifica se essa pergunta já foi respondida antes
-  let perguntaId = atual  // índice da pergunta no array
-  let jaRespondida = dados.respondidas.includes(perguntaId)
-
-  // mostra cores
-  p.opcoes.forEach((op,i)=>{
-    let el=document.getElementById("op"+i)
-    el.style.pointerEvents="none" // trava as opções
-    if(i===p.correta){
-      el.classList.add("correta")
-    } else if(i===opcaoSelecionada){
-      el.classList.add("errada")
-    }
-  })
-
-  // atualiza pontos e salva apenas se não tinha respondido ainda
-  if(!jaRespondida){
-    if(opcaoSelecionada===p.correta){
-      pontos++
-      dados.acertos++
-    }
-    dados.respondidas.push(perguntaId)
-    localStorage.setItem(chave, JSON.stringify(dados))
-  }
-
-  // mostra explicação
-  document.getElementById("explicacao").innerText = "Explicação: " + p.explicacao
-
-  // esconde o botão Confirmar e mostra Próxima
-  btnConfirmar.style.display="none"
-  btnProxima.style.display="block"
-}
-
-
-
-
-
-// PRÓXIMA PERGUNTA
+// PRÓXIMA
 function proxima(){
   atual++
   if(atual>=perguntas.length){
-    alert("Quiz finalizado. \nClique em OK para retomar ao menu de seleção")
+    alert("Quiz finalizado. Pontuação: "+pontos)
     voltarMenu()
     return
   }
-  btnProxima.style.display="none"
-  opcaoSelecionada=null
   mostrarPergunta()
 }
 
-// VOLTAR MENU
+// VOLTAR
 function voltarMenu(){
   quizDiv.style.display="none"
   menuDiv.style.display="block"
@@ -3535,7 +3478,12 @@ function voltarMenu(){
 // AUTO LOGIN
 window.onload=function(){
   let nomeSalvo=localStorage.getItem("usuarioQuiz")
-  if(nomeSalvo){usuario=nomeSalvo; loginDiv.style.display="none"; menuDiv.style.display="block"; selecionarModo();}
+  if(nomeSalvo){
+    usuario=nomeSalvo
+    loginDiv.style.display="none"
+    menuDiv.style.display="block"
+    selecionarModo()
+  }
 }
 </script>
 </body>
